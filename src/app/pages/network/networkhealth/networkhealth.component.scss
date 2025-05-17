@@ -1,0 +1,70 @@
+.networkHealthSection {
+    padding-left: 10px;
+    padding-top: 20px;
+}
+.player_information .player_information_header {
+    background-color: #f9f9f9;
+    height: 40px;
+    font-size: 20px;
+    padding-top: 6px;
+    padding-left: 10px;
+    font-weight: bold;
+    border: 1px solid #ddd;
+}
+.col-xs-12 {
+    width: 100%;
+}
+.networkHealthSectionLabel {
+  font-weight: bold;
+  max-width: 180px;
+  margin-top: 8px;
+  white-space: nowrap;
+  min-width: 165px;
+}
+.network-section {
+    margin-bottom: 10px;
+}
+.form-group {
+    display:flex;
+}
+.form-control {
+    padding: 0.35rem 0.5rem;
+}
+@media (min-width: 992px) {
+  .col-md-5 {
+    float: left;
+  }
+}
+@media (min-width: 990px) {
+  .col-12 {
+    display: block!important;
+  }
+ }
+
+
+.container {
+  max-width: 100% !important;
+  min-width: 100% !important;
+}
+@media only screen and (min-device-width: 280px) and (max-device-width: 768px) {
+  .field-container {
+    flex-direction: column;
+  }
+}
+
+.field-container {
+  display: inline-grid !important;
+}
+
+.table {
+  th {
+    white-space: nowrap;
+  }
+  td {
+    white-space: nowrap;
+  }
+}
+.disabled-fields {
+  min-width: 220px;
+  max-width: 220px;
+}

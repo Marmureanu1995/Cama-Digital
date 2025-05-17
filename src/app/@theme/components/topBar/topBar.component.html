@@ -1,0 +1,42 @@
+<nb-card accent="info" class="top-bar" *ngIf="alternateLogin" style="border-top-color: #262626">
+  <nb-card-body style="background-color: white; padding: 0.25rem">
+    <div *ngIf="alternateLogin">
+      <span class="msg" style="color: black; margin: unset; width: 100%">
+        <div style="display: inline-flex; width: 100%">
+          <div class="ion-android-people" style="padding-right: 10px; padding-left: 15px; font-size: 29px"></div>
+          <div style="font-size: larger; margin-top: 1%; margin-left: 1%">
+            {{ msg }}
+          </div>
+        </div>
+      </span>
+      <span class="exit-lg" (click)="exitAccess()"> Exit Access </span>
+      <span class="exit-sm" (click)="exitAccess()">
+        <i class="ion-android-exit"></i>
+      </span>
+    </div>
+  </nb-card-body>
+</nb-card>
+<nb-card accent="info" class="top-bar" *ngIf="showBanner" style="border-top-color: #262626; margin-left: 7.5px">
+  <nb-card-body style="background-color: white; padding: 0.25rem">
+    <div>
+      <span style="color: black; margin: unset; width: 100%">
+        <div style="display: inline-flex; width: 100%">
+          <div class="ion-android-notifications" style="padding-right: 10px; padding-left: 15px; font-size: 29px"></div>
+          <marquee direction="left" onmouseover="this.stop();" onmouseout="this.start();">
+            <div style="font-size: larger; margin-top: 0.5%; margin-left: 1%" *ngIf="notLastestApps.length == 1">
+              Player: {{ notLastestApps[0].playerName }} is not using latest
+              application.
+            </div>
+            <div style="font-size: larger; margin-top: 0.5%; margin-left: 1%" *ngIf="notLastestApps.length > 1">
+              {{ notLastestApps.length }} devices are not using latest
+              application.
+            </div>
+          </marquee>
+        </div>
+        <span>
+          <!-- <button nbButton status="warning" style="padding:unset !important">Warning</button> -->
+        </span>
+      </span>
+    </div>
+  </nb-card-body>
+</nb-card>

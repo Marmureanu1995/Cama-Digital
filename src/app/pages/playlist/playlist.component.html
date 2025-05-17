@@ -1,0 +1,802 @@
+<div class="row">
+  <div id="mySidenav" class="sidenav">
+    <div class="playlist-color">
+      <div class="align_playlist_btn">
+        <div class="row" style="width: 100%; margin-left: 0">
+          <div class="col-md-6 col-6" style="padding-right: 0">
+            <div class="align_a text-center" (click)="refreshChannel()">
+              <i class="align_btn ion-android-sync" style="margin: 0 auto"></i>
+              {{ "Refresh" | translate }}
+            </div>
+          </div>
+          <div class="col-md-6 col-6">
+            <div class="align_a text-center" (click)="addPlaylist(AddPlaylistDialog)">
+              <i class="align_btn ion-android-add"></i>
+              {{ "Add" | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12" style="margin-top: 10px">
+        <nb-select [(selected)]="selectedValue" style="background-color: white; border-radius: 10px" outline status="primary" size="xsmall" (selectedChange)="onSelection($event)" placeholder="Sort" outline>
+          <nb-option value="1">PlayList Name</nb-option>
+          <nb-option value="2">Creation Date</nb-option>
+        </nb-select>
+      </div>
+    </div>
+    <div class="col-12 playlist">
+      <div *ngFor="let playList of getAllPlayList; let i = index">
+        <div class="playlist_items row" *ngIf="selectedPlayList.id == playList.id" style="background-color: #262626">
+          <div class="col-sm-8 col-7" (click)="playListSelected(playList)" style="white-space: unset">
+            <label class="playlist_name truncate-text" [attr.title]="playList.name.length > 15 ? playList.name : ''">{{ playList.name }}</label>
+          </div>
+          <div class="col-sm-4 col-5">
+            <i *ngIf="user.role != 'user'" class="icons-playlist ion-trash-b" (click)="deletePlaylistModal(DeletePlaylistDialog, playList)"></i>
+            <i class="icons-playlist ion-edit" (click)="editPlaylist(EditPlaylistDialog, playList)" style="margin-right: 20%"></i>
+          </div>
+        </div>
+        <div class="playlist_items row" *ngIf="selectedPlayList.id != playList.id">
+          <div class="col-sm-8 col-7" (click)="playListSelected(playList)" style="white-space: unset">
+            <label class="playlist_name truncate-text" [attr.title]="playList.name.length > 15 ? playList.name : ''">{{ playList.name }}</label>
+          </div>
+          <div class="col-sm-4 col-5">
+            <i *ngIf="user.role != 'user'" class="icons-playlist ion-trash-b" (click)="deletePlaylistModal(DeletePlaylistDialog, playList)"></i>
+            <i class="icons-playlist ion-edit" (click)="editPlaylist(EditPlaylistDialog, playList)" style="margin-right: 20%"></i>
+          </div>
+        </div>
+      </div>
+      <div class="emptyspaceadd">
+        <label class="playlist_name"></label>
+      </div>
+    </div>
+  </div>
+
+  <div id="check" class="cards">
+    <ngx-topBar></ngx-topBar>
+    <div class="row card1" style="margin-bottom: -17px">
+      <div #rowLayout cdkDropListGroup style="width: 99%">
+        <nb-card size="tiny" class="" [nbSpinner]="ChannelPlayListloading" nbSpinnerStatus="danger" nbSpinnerSize="large" [ngClass]="
+            dragStarted == true ? 'card_dropZone showBorder' : 'card_dropZone'
+          ">
+          <div class="DragDrop_Container">
+            <div class="row row-sm">
+              <div class="col col-left">
+                <div class="row items_align" style="margin-top: 0; margin-right: 10px; float: unset" id="align_menu">
+                  <div style="display: inline-flex; width: 25%; min-width: 25%" class="name-time-sm">
+                    <span class="ion-android-menu toggle-icon menu_padding" id="open_btn" (click)="openNav()">
+                    </span>
+                    <span class="ion-android-menu toggle-icon menu_padding" id="close_btn" style="font-size: 30px; cursor: pointer" (click)="closeNav()">
+                    </span>
+                    <h5 class="playlist_heading" *ngIf="
+                        getAllPlayList.length != 0 &&
+                        selectedPlayList &&
+                        selectedPlayList?.name &&
+                        selectedPlayList?.name.length
+                      " [attr.title]="
+                        selectedPlayList?.name.length > 20
+                          ? selectedPlayList?.name
+                          : ''
+                      ">
+                      {{ selectedPlayList?.name | truncate : [20, "..."] }}
+                    </h5>
+                    <p class="preview_time menu_padding sm-time">
+                      {{ TotalTimeString }}
+                    </p>
+                  </div>
+                  <div style="
+                      display: inline-flex;
+                      width: 75%;
+                      justify-content: flex-end;
+                    " class="btn-preview-sm">
+                    <p class="preview_time menu_padding lg-time">
+                      {{ TotalTimeString }}
+                    </p>
+                    <div class="lg">
+                      <button nbButton size="xsmall" class="preview_btn menu_padding" (click)="eyeAll(PreviewAllDialog)" status="info">
+                        <small>{{ "Preview" | translate }}</small>
+                      </button>
+                      <button nbButton size="xsmall" class="publish_btn menu_padding" [class.new-changes]="this.change" status="info" (click)="updatePlayList()">
+                        <small>{{ "Publish Changes" | translate }}</small>
+                      </button>
+                      <div style="float: right" class="col-xs-3 col-sm-4 input-group-sm">
+                        <input type="text" style="border-color: #262626" fieldSize="xsmall" [(ngModel)]="searchValue" (ngModelChange)="searchAllList()" class="form-control" id="searchBar" placeholder="Search" />
+                      </div>
+                    </div>
+                    <div class="sm">
+                      <div class="col-xs-3 col-sm-4 input-group-sm inner-addon left-addon sm-top-searchbar">
+                        <i style="cursor: pointer; font-size: 25px" class="ion-android-search searchIcon"></i>
+                        <input type="text" fieldSize="xsmall" [(ngModel)]="searchValue" [ngClass]="{
+                            'active-searchBar': searchValue !== '',
+                            'search-Bar': searchValue === ''
+                          }" (ngModelChange)="searchAllList()" class="form-control" />
+                      </div>
+                      <div class="sm-top-btnContainer">
+                        <button nbButton size="xsmall" class="preview_btn menu_padding" (click)="eyeAll(PreviewDialog)" status="info">
+                          <i class="ion-eye"></i>
+                        </button>
+                        <button nbButton size="xsmall" class="publish_btn menu_padding" [class.new-changes]="this.change" status="info" (click)="updatePlayList()">
+                          <i class="ion-checkmark"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-box" *ngIf="
+                selectedPlayList &&
+                selectedPlayList.media &&
+                selectedPlayList.media?.length > 0
+              " style="height: 340px; overflow: scroll; width: 100%">
+              <div fxLayout="row" class="dropZone_Reorder" *ngFor="
+                  let itemsRow of getItemsTable(rowLayout);
+                  let j = index;
+                  trackBy: trackByEmpCode
+                " cdkDropList cdkDropListOrientation="horizontal" [id]="'DropZone' + j" [cdkDropListData]="itemsRow" (cdkDropListDropped)="reorderDroppedItem($event, j)">
+                <div *ngFor="
+                    let media of itemsRow;
+                    let i = index;
+                    trackBy: trackByEmpCode
+                  " cdkDrag (cdkDragStarted)="onDragStartedDropZone(j)" [ngClass]="
+                    columnSize - 1 == i
+                      ? 'container_div lastindex'
+                      : 'container_div'
+                  ">
+                  <div class="drag-placeholder" *cdkDragPlaceholder></div>
+
+                  <div *ngIf="
+                      media?.type == 'image/jpeg' || media?.type == 'image/png'
+                    " fxLayoutAlign="center center" class="item-box">
+                    <img class="image" src="{{ media?.url }}" />
+                  </div>
+
+                  <div *ngIf="
+                      media?.type == 'video/mp4' ||
+                      media?.type == 'video/quicktime'
+                    " fxLayoutAlign="center center" class="item-box">
+                    <img class="image" [src]="media?.thumbnailURL || alternateImg" />
+                  </div>
+                  <div *ngIf="media?.type == 'html'" draggable="true" fxLayoutAlign="center center" class="item-box">
+                    <div *ngIf="media.url.includes('allurerealestate')">
+                      <img *ngIf="media.pictures[0]" class="image" [src]="media.pictures[0]" />
+                      <img *ngIf="!media.pictures[0]" class="image" [src]="alternateImg" />
+                    </div>
+                    <img class="image" *ngIf="
+                        media?.forecastdays != 4 &&
+                        media?.forecastdays != 5 &&
+                        media?.forecastdays != 1 &&
+                        !media.url.includes('allurerealestate')
+                      " [src]="
+                        alternateHtml
+                          | ngxSafeHtml : 'resourceUrl' || alternateImg
+                      " />
+                    <img class="image" *ngIf="media?.forecastdays == 4" src="../../../assets/images/Weather3day.png" />
+                    <img class="image" *ngIf="media?.forecastdays == 5" src="../../../assets/images/Weather4day.png" style="width: 100%" />
+                    <img class="image" *ngIf="media?.forecastdays == 1" src="../../../assets/images/currentweather.png" />
+                  </div>
+                  <div class="scheduleIcon" *ngIf="checkSchedule(media)">
+                    <button type="button" class="btn btn-md btn-success btn-icon scheduleBtn">
+                      <i class="ion-android-calendar"></i>
+                    </button>
+                  </div>
+                  <div class="middle_playlist">
+                    <div class="row">
+                      <button type="button" class="btn btn-md btn-primary btn-icon" (click)="read(dialog, media)">
+                        <i class="ion-information"></i>
+                      </button>
+                      <button type="button" class="btn btn-md btn-primary btn-icon" (click)="eye(PreviewDialog, media)">
+                        <i class="ion-eye"></i>
+                      </button>
+                      <button type="button" class="btn btn-md btn-warning btn-icon" (click)="schedule(ScheduleDialog, media)">
+                        <i class="ion-android-calendar"></i>
+                      </button>
+                    </div>
+                    <div class="row">
+                      <button type="button" class="btn btn-md btn-success btn-icon" (click)="editPlaylistMedia(EditPlayListDialog, media)">
+                        <i class="ion-edit"></i>
+                      </button>
+                      <button type="button" class="btn btn-md btn-danger btn-icon" (click)="
+                          deletePlaylistMedia(DeletePlaylistMediaDialog, media)
+                        ">
+                        <i class="ion-trash-b"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <br />
+                  <p class="DragDropContent dots" [class.dot-CardTitle]="media.name.length > 11">
+                    {{
+                    media?.name
+                    }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="container-box" *ngIf="
+                (selectedPlayList &&
+                  selectedPlayList.media &&
+                  selectedPlayList.media.length == 0) ||
+                getAllPlayList.length == 0
+              ">
+              <div fxLayout="row" cdkDropList id="DropZone" cdkDropListOrientation="horizontal" [cdkDropListData]="itemsRow" (cdkDropListDropped)="reorderDroppedItem($event, i)" style="height: 350px">
+                <div class="no-itemsContainer">
+                  <h2 class="no-itemsMsg">
+                    {{ "No media record found" | translate }}
+                  </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nb-card>
+        <nb-card class="dragDrop_cards">
+          <div class="DragDrop_Container">
+            <h5 style="
+                padding: 5px;
+                margin-left: 1%;
+                margin-bottom: 2%;
+                margin-top: 1%;
+              ">
+
+              {{ "Media" | translate }} &nbsp;
+              <label style="padding-left: 10%; padding-right: 5%"><input type="checkbox" [(ngModel)]="selectAll" (click)="checkAlldata($event)" />
+                {{ "Select All" | translate }}</label>
+              <button *ngIf="currentFolder" type="button" style="
+                background-color: #262626;
+                width: auto;
+                border-radius: 8% !important;
+                margin-right: 10px;
+                margin-left: 3%;
+                float: none;
+            " class="btn btn-md btn-primary" (click)="backFolder()">
+                <strong class="btn-lg" style="font-size: 12px; color: black; text-align: center">{{ "Back" | translate }}</strong>
+              </button>
+            </h5>
+            <div cdkDropList #doneList="cdkDropList" cdkDropListConnectedTo="DropZone" id="dragZone" (cdkDropListDropped)="drop()" class="dragZoneClass">
+              <div *ngIf="!currentFolder" class="">
+                <div style="width: 131px;cursor: pointer;" class="folderContainer col-sm-2 playlistItem-container container_div" *ngFor="let folder of allFolders; trackBy: trackByEmpCode">
+                  <div (click)="changeFolder(folder)">
+                    <img class="image" src="../../../assets/images/folder.png" />
+                  </div>
+                  <div style="font-weight: bold; text-align: center; margin-left: auto" class="dots" (click)="changeFolder(folder)">
+                    {{folder.name}}
+                  </div>
+                </div>
+              </div>
+              <div *ngFor="
+                  let media of getAllMediaList;
+                  let i = index;
+                  trackBy: trackByEmpCode
+                " cdkDrag (cdkDragStarted)="onDragStarted(i)" [cdkDragDisabled]="media.length == 0">
+
+                <div class="playlistItem-container container_div">
+                  <div class="drag-placeholder" *cdkDragPlaceholder></div>
+
+                  <div *ngIf="media?.length > 0; else emptyPlaylist" fxLayoutAlign="center center">
+                    <div *ngIf="
+                        media?.type == 'image/jpeg' ||
+                        media?.type == 'image/png'
+                      ">
+                      <img class="image" src="{{ media?.url }}" />
+                    </div>
+                    <div *ngIf="
+                        media?.type == 'video/mp4' ||
+                        media?.type == 'video/quicktime'
+                      ">
+                      <img class="image" [src]="media?.thumbnailURL || alternateImg" />
+                    </div>
+                    <div *ngIf="media?.type == 'html'" draggable="true">
+                      <div *ngIf="media.url.includes('allurerealestate')">
+                        <img *ngIf="media.pictures[0]" class="image" [src]="media.pictures[0]" />
+                        <img *ngIf="!media.pictures[0]" class="image" [src]="alternateImg" alt="" />
+                      </div>
+                      <img class="image" *ngIf="media?.forecastdays == 4" src="../../../assets/images/Weather3day.png" />
+                      <img class="image" *ngIf="media?.forecastdays == 5" src="../../../assets/images/Weather4day.png" style="width: 100%" />
+                      <img class="image" *ngIf="media?.forecastdays == 1" src="../../../assets/images/currentweather.png" />
+                      <img class="image" *ngIf="
+                          media?.forecastdays != 4 &&
+                          media?.forecastdays != 5 &&
+                          media?.forecastdays != 1 &&
+                          !media.url.includes('allurerealestate')
+                        " [src]="
+                          alternateHtml
+                            | ngxSafeHtml : 'resourceUrl' || alternateImg
+                        " />
+                    </div>
+                    <div class="middle_media">
+                      <div class="row">
+                        <button type="button" class="btn btn-md btn-primary btn-icon" (click)="read(dialog, media)">
+                          <i class="ion-information"></i>
+                        </button>
+                        <button type="button" class="btn btn-md btn-primary btn-icon" (click)="eye(PreviewDialog, media)">
+                          <i class="ion-eye"></i>
+                        </button>
+                      </div>
+                      <div class="row">
+                        <button type="button" class="btn btn-md btn-success btn-icon" (click)="edit(EditDialog, media)">
+                          <i class="ion-edit"></i>
+                        </button>
+                        <button type="button" class="btn btn-md btn-danger btn-icon" (click)="deleteMedia(DeleteDialog, media)">
+                          <i class="ion-trash-b"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div style="font-weight: bold; text-align: center" class="dots" (click)="onTouch(media, i)" [class.dot-CardTitle]="media.name.length > 11">
+                      <input class="chdata" type="checkbox" [(ngModel)]="media.state" value="{{ media.name }}" id="{{ media.id }}" />
+                      &nbsp;{{
+                      media.name
+                      }}
+                      &nbsp;
+                    </div>
+                  </div>
+                  <ng-template #emptyPlaylist>
+                    <div fxLayoutAlign="center center" [ngClass]="media.state ? 'item-box' : 'item-box'">
+                      <img class="image_playlist" src="/assets/images/no_playlist.png" />
+                      <p class="DragDropContent dots">
+                        <input *ngIf="media.length > 0" class="chdata" type="checkbox" [(ngModel)]="media.state" value="{{ media.name }}" id="{{ media.id }}" />
+                        &nbsp;{{
+                        (media.name | truncate : [8, "..."])
+                        }}
+                        &nbsp;
+                      </p>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nb-card>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #AddPlaylistDialog let-data let-ref="dialogRef">
+    <nb-card style="width: 410px; height: 265px">
+      <nb-card-header>{{ "Add Playlist" | translate }}</nb-card-header>
+      <nb-card-body>
+        <div class="form-group row">
+          <label for="newPlayListName" class="col-sm-4 col-form-label"><strong>{{ "Playlist Name" | translate }}:</strong></label>
+          <div class="col-sm-8 input-group-sm">
+            <input type="text" fieldSize="small" fullWidth class="form-control" [(ngModel)]="newPlayListName" [defaultValue]="newPlayListName" (keyup)="validationPlaylistNameCheck()" minlength="8" maxlength="32" [value]="newPlayListName" id="newPlayListName" placeholder="Playlist Name" />
+          </div>
+        </div>
+        <div style="margin-top: 50px" *ngIf="wrongPlaylistNamePattern" style="color: red; font-weight: bold; text-align: center">
+          {{ playlistPatternMessage }}
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <button nbButton (click)="closeDialog()">
+          {{ "Close" | translate }}
+        </button>
+        <button nbButton style="float: right" (click)="createPlayList()" status="success">
+          {{ "Add" | translate }}
+        </button>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template #EditPlaylistDialog let-data let-ref="dialogRef">
+    <nb-card style="width: 410px; height: 290px">
+      <nb-card-header>{{ "Edit Playlist" | translate }}</nb-card-header>
+      <nb-card-body>
+        <div class="form-group row">
+          <label for="editPlaylistName" class="col-sm-4 col-form-label"><strong>{{ "Playlist Name" | translate }}:</strong></label>
+          <div class="col-sm-8 input-group-sm">
+            <input type="text" fieldSize="small" fullWidth class="form-control" id="editPlaylistName" [(ngModel)]="data.name" maxlength="32" (keyup)="validationPlaylistNameEditCheck(data)" [defaultValue]="data.name" [value]="data.name" placeholder="Playlist Name" />
+          </div>
+        </div>
+        <div style="margin-top: 50px" *ngIf="wrongPlaylistNamePattern" style="color: red; font-weight: bold; text-align: center">
+          {{ playlistPatternMessage }}
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <button nbButton (click)="ref.close(); wrongPlaylistNamePattern = false">
+          {{ "Close" | translate }}
+        </button>
+
+        <button nbButton style="float: right" status="success" (click)="updatePlaylistName(data)">
+          {{ "Update" | translate }}
+        </button>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template #DeletePlaylistDialog let-data let-ref="dialogRef">
+    <nb-card>
+      <nb-card-header>{{ "Delete Playlist" | translate }}</nb-card-header>
+      <nb-card-body>{{
+        "Are you sure you want to delete this playlist?" | translate
+        }}</nb-card-body>
+      <nb-card-footer>
+        <button nbButton (click)="ref.close()">
+          {{ "Close" | translate }}
+        </button>
+        <button nbButton style="float: right" status="danger" (click)="deletePlayList(data); ref.close()">
+          {{ "Delete" | translate }}
+        </button>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template #DeletePlaylistMediaDialog let-data let-ref="dialogRef">
+    <nb-card>
+      <nb-card-header>{{ "Delete Media" | translate }}</nb-card-header>
+      <nb-card-body>{{
+        "Are you sure you want to delete this media from this playlist?"
+        | translate
+        }}</nb-card-body>
+      <nb-card-footer>
+        <button nbButton (click)="ref.close()">
+          {{ "Close" | translate }}
+        </button>
+        <button nbButton style="float: right" status="danger" (click)="deletePM(data)">
+          {{ "Delete" | translate }}
+        </button>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template class="row col-lg-12" #dialog let-data let-ref="dialogRef">
+    <nb-card style="width: 410px; height: 470px">
+      <nb-card-header>{{ "Information" | translate }}</nb-card-header>
+      <nb-card-body>
+        <div class="row">
+          <label class="col-sm-5"><strong>{{ "Name" | translate }}:</strong></label>
+          <div class="col-sm-7">
+            {{
+            data.name
+            }}
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <label class="col-sm-5"><strong>{{ "Type" | translate }}:</strong></label>
+          <div class="col-sm-7">
+            {{ data.type }}
+          </div>
+        </div>
+        <hr *ngIf="data.type != 'html'" />
+        <div class="row" *ngIf="data.type != 'html'">
+          <label class="col-sm-5"><strong>{{ "Size" | translate }}:</strong></label>
+          <div class="col-sm-7">
+            {{ (data.size / (1024 * 1024)).toFixed(2) }} MB
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <label class="col-sm-5"><strong>{{ "Length" | translate }}:</strong></label>
+          <div class="col-sm-7">{{ data.length }} Sec.</div>
+        </div>
+        <hr />
+        <div class="row">
+          <label class="col-sm-5"><strong>{{ "Resolution" | translate }}:</strong></label>
+          <div class="col-sm-7">{{ data.width }} * {{ data.height }}</div>
+        </div>
+        <hr />
+        <div class="row">
+          <label class="col-sm-5"><strong>{{ "Date Created" | translate }}:</strong></label>
+          <div class="col-sm-7" *ngIf="data.creationDate.seconds">
+            {{ data.creationDate.seconds * 1000 | date : "medium" }}
+          </div>
+          <div class="col-sm-7" *ngIf="!data.creationDate.seconds">
+            {{ data.creationDate | date : "medium" }}
+          </div>
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <button nbButton (click)="ref.close()">
+          {{ "Close" | translate }}
+        </button>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template #EditDialog let-data let-ref="dialogRef">
+    <nb-card style="width: 410px; height: 470px">
+      <nb-card-header>Edit</nb-card-header>
+      <nb-card-body>
+        <div class="form-group row">
+          <label for="mediaName" class="col-sm-5 col-form-label"><strong>{{ "Name" | translate }}:</strong></label>
+          <div class="col-sm-7 input-group-sm">
+            <input type="text" fieldSize="small" fullWidth class="form-control" id="mediaName" [(ngModel)]="data.name" [defaultValue]="data.name" maxlength="32" [value]="data.name" placeholder="Media Name" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-5 col-form-label"><strong>{{ "Type" | translate }}:</strong></label>
+          <div style="margin-top: 2%" class="col-sm-7 input-group-sm">
+            {{ data.type }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="data.type != 'html'">
+          <label class="col-sm-5 col-form-label"><strong>{{ "Size" | translate }}:</strong></label>
+          <div style="margin-top: 2%" class="col-sm-7 input-group-sm">
+            {{ (data.size / (1024 * 1024)).toFixed(2) }} MB
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="mediaLength" class="col-sm-5 col-form-label"><strong>{{ "Length (Sec)" | translate }}:</strong></label>
+          <div class="col-sm-7 input-group-sm">
+            <input type="number" [disabled]="
+                data.type == 'video/mp4' || data.type == 'video/quicktime'
+              " fieldSize="small" fullWidth class="form-control" id="mediaLength" placeholder="Media Length" min="0" oninput="validity.valid||(value='');" [(ngModel)]="data.length" [defaultValue]="data.length" [value]="data.length" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-5 col-form-label"><strong>{{ "Resolution" | translate }}:</strong></label>
+          <div style="margin-top: 2%" class="col-sm-7 input-group-sm">
+            {{ data.width }} * {{ data.height }}
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-5 col-form-label"><strong>{{ "Date Created" | translate }}:</strong></label>
+          <div class="col-sm-7" *ngIf="data.creationDate.seconds">
+            {{ data.creationDate.seconds * 1000 | date : "medium" }}
+          </div>
+          <div class="col-sm-7" *ngIf="!data.creationDate.seconds">
+            {{ data.creationDate | date : "medium" }}
+          </div>
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <button nbButton (click)="ref.close()">
+          {{ "Close" | translate }}
+        </button>
+        <button nbButton style="float: right" status="success" (click)="updateMediaItem(data); ref.close()">
+          {{ "Update" | translate }}
+        </button>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template #EditPlayListDialog let-data let-ref="dialogRef">
+    <nb-card style="width: 410px; height: 470px">
+      <nb-card-header>Edit</nb-card-header>
+      <nb-card-body>
+        <div class="form-group row">
+          <label for="mediaName" class="col-sm-5 col-form-label"><strong>{{ "Name" | translate }}:</strong></label>
+          <div class="col-sm-7 input-group-sm">
+            <input type="text" fieldSize="small" fullWidth class="form-control" id="mediaName" [(ngModel)]="data.name" [defaultValue]="data.name" maxlength="32" [value]="data.name" placeholder="Media Name" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-5 col-form-label"><strong>{{ "Type" | translate }}:</strong></label>
+          <div style="margin-top: 2%" class="col-sm-7 input-group-sm">
+            {{ data.type }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="data.type != 'html'">
+          <label class="col-sm-5 col-form-label"><strong>{{ "Size" | translate }}:</strong></label>
+          <div style="margin-top: 2%" class="col-sm-7 input-group-sm">
+            {{ (data.size / (1024 * 1024)).toFixed(2) }} MB
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="mediaLength" class="col-sm-5 col-form-label"><strong>{{ "Length (Sec)" | translate }}:</strong></label>
+          <div class="col-sm-7 input-group-sm">
+            <input type="number" [disabled]="
+                data.type == 'video/mp4' || data.type == 'video/quicktime'
+              " fieldSize="small" fullWidth class="form-control" id="mediaLength" placeholder="Media Length" min="0" oninput="validity.valid||(value='');" [(ngModel)]="data.length" [defaultValue]="data.length" [value]="data.length" />
+          </div>
+          <!-- this.value = this.value.replace(/[^\d-.]/g, '').replace(/(?!^)-/g, '').replace(/\.(?=.*\.)/g, '')" -->
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-5 col-form-label"><strong>{{ "Resolution" | translate }}:</strong></label>
+          <div style="margin-top: 2%" class="col-sm-7 input-group-sm">
+            {{ data.width }} * {{ data.height }}
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-5 col-form-label"><strong>{{ "Date Created" | translate }}:</strong></label>
+          <div class="col-sm-7" *ngIf="data.creationDate.seconds">
+            {{ data.creationDate.seconds * 1000 | date : "medium" }}
+          </div>
+          <div class="col-sm-7" *ngIf="!data.creationDate.seconds">
+            {{ data.creationDate | date : "medium" }}
+          </div>
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <button nbButton (click)="ref.close()">
+          {{ "Close" | translate }}
+        </button>
+        <button nbButton style="float: right" status="success" (click)="updatePlayListMediaItem(data)">
+          {{ "Update" | translate }}
+        </button>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template #ScheduleDialog let-data let-ref="dialogRef">
+    <nb-card style="width: 410px; height: 440px">
+      <nb-card-header>{{ "Content Schedule" | translate }}</nb-card-header>
+      <nb-card-body>
+        <div class="form-group row">
+          <div class="col-sm-12 input-group-sm">
+            <nb-checkbox [(ngModel)]="sch.dateCheck">{{
+              "Date" | translate
+              }}</nb-checkbox>
+            <nb-checkbox *ngIf="false" [(ngModel)]="sch.removeMediaAfterExpiry">{{ "Remove Media After Expiry" | translate }}</nb-checkbox>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-6 input-group-sm">{{ "From" | translate }}:</div>
+          <div class="col-sm-6 input-group-sm">{{ "To" | translate }}:</div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-6 input-group-sm">
+            <input type="date" [(ngModel)]="sch.dateFrom" [disabled]="!sch.dateCheck" fieldSize="small" fullWidth class="form-control" (change)="onDateChangeValidation()" />
+          </div>
+          <div class="col-sm-6 input-group-sm">
+            <input type="date" [(ngModel)]="sch.dateTo" [disabled]="!sch.dateCheck" fieldSize="small" fullWidth class="form-control" (change)="onDateChangeValidation()" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-12 input-group-sm">
+            <nb-checkbox [(ngModel)]="sch.timeCheck" (change)="onSelectTimeCheck($event)">{{ "Time" | translate }}
+            </nb-checkbox>
+            <nb-checkbox [(ngModel)]="sch.allDay" (change)="onSelectDaysCheck($event)">{{ "All Day" | translate }}
+            </nb-checkbox>
+            <nb-checkbox *ngIf="false" [(ngModel)]="sch.repeatEveryYear">{{ "Repeat Every Year" | translate }}
+            </nb-checkbox>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-6 input-group-sm">{{ "From" | translate }}:</div>
+          <div class="col-sm-6 input-group-sm">{{ "To" | translate }}:</div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-6 input-group-sm">
+            <input [disabled]="!sch.timeCheck" type="time" [(ngModel)]="sch.timeFrom" fieldSize="small" fullWidth class="form-control" (change)="onTimeChangeValidation()" />
+          </div>
+          <div class="col-sm-6 input-group-sm">
+            <input [disabled]="!sch.timeCheck" type="time" [(ngModel)]="sch.timeTo" fieldSize="small" fullWidth class="form-control" (change)="onTimeChangeValidation()" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-4 input-group-sm">
+            <nb-checkbox [(ngModel)]="sch.days[0]">{{
+              "Monday" | translate
+              }}</nb-checkbox>
+          </div>
+          <div class="col-sm-4 input-group-sm">
+            <nb-checkbox [(ngModel)]="sch.days[1]">{{
+              "Tuesday" | translate
+              }}</nb-checkbox>
+          </div>
+          <div class="col-sm-4 input-group-sm">
+            <nb-checkbox [(ngModel)]="sch.days[2]">{{
+              "Wednesday" | translate
+              }}</nb-checkbox>
+          </div>
+          <div class="col-sm-4 input-group-sm">
+            <nb-checkbox [(ngModel)]="sch.days[3]">{{
+              "Thursday" | translate
+              }}</nb-checkbox>
+          </div>
+          <div class="col-sm-4 input-group-sm">
+            <nb-checkbox [(ngModel)]="sch.days[4]">{{
+              "Friday" | translate
+              }}</nb-checkbox>
+          </div>
+          <div class="col-sm-4 input-group-sm">
+            <nb-checkbox [(ngModel)]="sch.days[5]">{{
+              "Saturday" | translate
+              }}</nb-checkbox>
+          </div>
+          <div class="col-sm-4 input-group-sm">
+            <nb-checkbox [(ngModel)]="sch.days[6]">{{
+              "Sunday" | translate
+              }}</nb-checkbox>
+          </div>
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <button nbButton (click)="ref.close()">
+          {{ "Close" | translate }}
+        </button>
+        <button nbButton style="float: right" status="success" (click)="updateMediaSchedule(data)">
+          {{ "Save" | translate }}
+        </button>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+  <!-- *ngIf="previewMedia && previewMedia.type" -->
+  <ng-template #PreviewAllDialog let-data let-ref="dialogRef">
+    <div style="background: black">
+      <div *ngIf="
+          previewMedia.type == 'image/jpeg' || previewMedia.type == 'image/png'
+        ">
+        <img style="max-width: 960px; max-height: 540px" src="{{ previewMedia?.url }}" />
+      </div>
+
+      <div *ngIf="
+          previewMedia.type == 'video/mp4' ||
+          previewMedia.type == 'video/quicktime'
+        ">
+        <video *ngIf="vidCheck" width="960" height="540" controls autoplay preload="metadata" (ended)="changeMedia($event)">
+          <source src="{{ previewMedia?.url }}" type="video/mp4" />
+        </video>
+      </div>
+      <div *ngIf="
+          previewMedia.type == 'video/mp4' ||
+          previewMedia.type == 'video/quicktime'
+        ">
+        <video *ngIf="!vidCheck" width="960" height="540" controls autoplay preload="metadata" (ended)="changeMedia($event)">
+          <source src="{{ previewMedia?.url }}" type="video/mp4" />
+        </video>
+      </div>
+      <div *ngIf="previewMedia.type == 'html'" draggable="true">
+        <iframe style="width: 960px; height: 540px !important" [src]="
+            previewMedia?.url | ngxSafeHtml : 'resourceUrl' || alternateImg
+          "></iframe>
+      </div>
+      <div *ngIf="previewMedia && previewMedia.type == 'weather'" style="background-color: white">
+        <iframe title="Weather" [src]="previewMedia?.url | ngxSafeHtml : 'resourceUrl'" style="max-width: 960px; max-height: 540px"></iframe>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #PreviewDialog let-data let-ref="dialogRef">
+    <div style="background: black">
+      <div *ngIf="data.type == 'image/jpeg' || data.type == 'image/png'">
+        <img style="max-width: 960px; max-height: 540px !important" class="preview-card" src="{{ data?.url }}" />
+      </div>
+      <div *ngIf="data.type == 'video/mp4' || data.type == 'video/quicktime'">
+        <video class="preview-card" autoplay width="960" height="540" controls>
+          <source src="{{ data.url }}" type="video/mp4" />
+        </video>
+      </div>
+      <div *ngIf="data.type == 'html'" draggable="true">
+        <iframe class="preview-card" style="width: 960px; height: 540px !important" [src]="data.url | ngxSafeHtml : 'resourceUrl' || alternateImg"></iframe>
+      </div>
+      <div *ngIf="data.type == 'weather'" style="background-color: white">
+        <iframe class="preview-card" title="Weather" [src]="data.url | ngxSafeHtml : 'resourceUrl'" style="max-width: 960px; max-height: 540px !important"></iframe>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #SaveChannelConfirmationDialog let-data let-ref="dialogRef">
+    <nb-card class="card-sm-2">
+      <nb-card-header>{{ "PlayList" | translate }}</nb-card-header>
+      <nb-card-body>{{
+        "Do you want to save pending publish changes?" | translate
+        }}</nb-card-body>
+      <nb-card-footer>
+        <div class="btn-lg-2">
+          <button nbButton (click)="ref.close('No')">
+            {{ "No" | translate }}
+          </button>
+          <button nbButton style="float: right" status="danger" (click)="ref.close('Yes')">
+            {{ "Yes" | translate }}
+          </button>
+        </div>
+        <div class="btn-sm-2">
+          <button nbButton (click)="ref.close('No')">
+            <i style="cursor: pointer" class="ion-close"></i>
+          </button>
+          <button nbButton style="float: right" status="danger" (click)="ref.close('Yes')">
+            <i style="cursor: pointer" class="ion-checkmark"></i>
+          </button>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template #DeleteDialog let-data let-ref="dialogRef">
+    <nb-card>
+      <nb-card-header>{{ "Delete Media" | translate }}</nb-card-header>
+      <nb-card-body>{{
+        "Are you sure you want to delete this media?" | translate
+        }}</nb-card-body>
+      <nb-card-footer>
+        <button nbButton (click)="ref.close()">
+          {{ "Close" | translate }}
+        </button>
+        <button nbButton style="float: right" status="danger" (click)="deleteM(data); ref.close()">
+          {{ "Delete" | translate }}
+        </button>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <button nbButton [hidden]="true" id="showsavechannelconfirm" (click)="ConfirmationSaveModal(SaveChannelConfirmationDialog)"></button>
+</div>

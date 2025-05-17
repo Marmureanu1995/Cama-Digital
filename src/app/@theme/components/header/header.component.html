@@ -1,0 +1,52 @@
+<div class="header-container" [class.left]="position === 'normal'" [class.right]="position === 'inverse'">
+  <div class="logo-containter">
+    <a (click)="toggleSidebar()" href="#" class="navigation"><i class="nb-menu"></i></a>
+    <div class="logo" (click)="goToHome()">
+      <img *ngIf="restaurant.picURL && restaurant.picURL !== ''" src="{{ restaurant.picURL }}" alt="" />
+      {{ restaurant.name }}
+    </div>
+    <div style="margin-left: 30vw" class="selected-Item">
+      <h2>{{ selectedItem }}</h2>
+    </div>
+  </div>
+  <!--<ngx-theme-switcher></ngx-theme-switcher>-->
+</div>
+<div class="header-container">
+  <!--<ngx-layout-direction-switcher></ngx-layout-direction-switcher>-->
+  <!--<div style="float: right;">
+    <nb-select style="float: right;width: 28%;margin-top: 2%;" status="success" [(ngModel)]="selectedItemNgModel" [(selected)]="translate.currentLang" (ngModelChange)="languageChanged()">
+      <nb-option  value="English" ><img src="../../../assets/images/united-states.svg" style="width: 22%;margin-right: 2%">English</nb-option>
+      <nb-option  value="Deutsch" ><img src="../../../assets/images/germany.svg" style="width: 22%;;margin-right: 2%">Deutsch</nb-option>
+      <nb-option  value="Francais" ><img src="../../../assets/images/flag.svg" style="width: 22%;;margin-right: 2%">Francais</nb-option>
+      <nb-option  value="Nederlands" ><img src="../../../assets/images/netherlands.svg" style="width: 22%;margin-right: 2%">Nederlands</nb-option>
+    </nb-select>
+    <img src="../../../assets/images/language.svg" style="width: 4%;float: right;margin-right: 2%;margin-top: 3%;">
+  </div>-->
+  <div class="row">
+    <div class="col-xl-12 col-xs-12 col-md-12 col-lg-12 row-container" style="display: inline-flex; justify-content: flex-end">
+      <div class="col-sm-8 col-xl-7 col-xs-4 col-md-6 col-lg-6 btn-language lang-lg" style="padding: 0 10px 0 0">
+        <nb-select style="float: right; margin-right: 1%; padding: 0; width: 100%" status="success" [(ngModel)]="selectedItemNgModel" [(selected)]="translate.currentLang" (ngModelChange)="languageChanged()">
+          <nb-option value="English"><img src="../../../assets/images/united-states.svg" style="width: 22%; margin-right: 2%" />English</nb-option>
+          <nb-option value="Deutsch"><img src="../../../assets/images/germany.svg" style="width: 22%; margin-right: 2%" />Deutsch</nb-option>
+          <nb-option value="Francais"><img src="../../../assets/images/flag.svg" style="width: 22%; margin-right: 2%" />Francais</nb-option>
+          <nb-option value="Nederlands"><img src="../../../assets/images/netherlands.svg" style="width: 22%; margin-right: 2%" />Nederlands</nb-option>
+        </nb-select>
+      </div>
+      <div class="col-sm-8 col-xl-7 col-xs-4 col-md-6 col-lg-6 btn-language lang-sm" style="padding: 0 10px 0 0">
+        <nb-select style="float: right; margin-right: 1%; padding: 0; width: 100%" status="success" [(ngModel)]="selectedItemNgModel" [(selected)]="translate.currentLang" (ngModelChange)="languageChanged()">
+          <nb-option value="English"><img src="../../../assets/images/united-states.svg" style="width: 100%; margin-right: 2%" /><span class="lang-sm-span">English</span></nb-option>
+          <nb-option value="Deutsch"><img src="../../../assets/images/germany.svg" style="width: 100%; margin-right: 2%" /><span class="lang-sm-span">Deutsch</span></nb-option>
+          <nb-option value="Francais"><img src="../../../assets/images/flag.svg" style="width: 100%; margin-right: 2%" /><span class="lang-sm-span">Francais</span></nb-option>
+          <nb-option value="Nederlands"><img src="../../../assets/images/netherlands.svg" style="width: 100%; margin-right: 2%" /><span class="lang-sm-span">Nederlands</span></nb-option>
+        </nb-select>
+      </div>
+      <div class="col-sm-5 col-xl-4 col-xs-4 col-md-4 col-lg-4">
+        <nb-actions size="medium" [class.right]="position === 'normal'" [class.left]="position === 'inverse'">
+          <nb-action *nbIsGranted="['view', 'user']">
+            <nb-user [nbContextMenu]="userMenu" [name]="user?.username" [picture]="user?.picURL" nbContextMenuTrigger="click"></nb-user>
+          </nb-action>
+        </nb-actions>
+      </div>
+    </div>
+  </div>
+</div>

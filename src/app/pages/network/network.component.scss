@@ -1,0 +1,177 @@
+/*SideNav css*/
+.sidenav {
+    height: 100%;
+    width: 220px;
+    position: fixed;
+    z-index: 1;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 0%;
+  }
+  .playlist-color {
+    background: black;
+    padding-bottom: 13px;
+    display: block;
+  }
+  .align_playlist_btn {
+    margin-top: 30px;
+    padding: 0%;
+    border-bottom: solid 1px #6d6d6b;
+  }
+  .align_a {
+    margin: 10px 0;
+    font-size: 15px;
+    color: #fff;
+  }
+  a {
+    text-decoration: none;
+    font-size: 15px;
+  }
+  .align_btn {
+    display: block;
+    margin:2%;
+  }
+  .ion-android-sync {
+    font-size: 20px;
+    margin-left: 12px;
+    padding-bottom: 5px;
+    font-weight: 700!important;
+  }
+  .ion-android-add {
+    font-size: 20px;
+    margin-left: 8px;
+    padding-bottom: 5px;
+
+  }
+  .ion-android-apps {
+    font-size: 20px;
+    margin-left: 10px;
+    padding-bottom: 5px;
+  }
+  .playlist-sort {
+    margin-bottom: 5px;
+    margin-top: 20px;
+  }
+  .sort {
+    display: inline-block;
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 5px;
+  }
+  .playlist {
+    margin-bottom: 2%;
+    margin-top: 1%;
+    padding: 0%!important;
+    height: 100%;
+  }
+  .playlist_items {
+    padding-top: 10px;
+    padding-left: 8%;
+    padding-right: 8%;
+    color: #fff;
+    padding-bottom: 5px;
+    border-bottom: solid 1px #6d6d6b;
+  }
+  .playlist_items:hover {
+    background-color:#6d6d6b;
+  }
+  .playlist_name {
+    display: inline-block;
+    font-weight: 400;
+    font-size: 14px;
+    padding-top: 2px;
+  }
+  .icons-playlist {
+    float: right;
+    right: 0;
+    top: 0;
+    margin-right: 5%;
+  }
+  .sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+  /*SideNav ended*/
+.network-section {
+  height: 100%;
+  padding: 0%;
+}
+.ion-android-menu {
+  font-size: 30px;
+  display: inline-block;
+}
+.emptyspaceadd {
+  padding-top: 10px;
+  padding-left: 8%;
+  padding-right: 8%;
+  color: #fff;
+  padding-bottom: 5px;
+  border-bottom: solid 1px #6d6d6b;
+  border-bottom: none !important;
+  height: 20%;
+}
+
+.cards {
+  margin-top: 10px;
+  margin-bottom: 2px;
+  max-width: 100% !important;
+}
+
+@media only screen and (min-device-width: 280px) and (max-device-width: 980px) {
+  .sidenav {
+    width: 0%;
+    z-index: 100;
+  }
+  .cards {
+    width: 99%;
+  }
+}
+
+@media only screen and (min-device-width: 980px) {
+  .cards {
+    max-width: calc(100% - 220px);
+    min-width: calc(100% - 220px);
+    margin-bottom: 2px;
+    margin-top: 10px;
+    margin-left: 220px;
+  }
+}
+@media only screen and (min-device-width: 574px) and (max-device-width: 1300px) {
+  .col-sm-3 {
+    max-width: 45%;
+  }
+}
+@media only screen and (max-device-width: 574px) {
+  .cards {
+    min-width: 100% !important;
+  }
+}
+
+@media screen and (max-width: 490px) {
+  .card-delete-Dialogue {
+    width: 80% !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .btn-lg-2 {
+    display: none;
+  }
+  .btn-sm-2 {
+    display: inherit;
+  }
+}
+@media screen and (min-width: 490px) {
+  .btn-lg-2 {
+    display: inherit;
+  }
+  .btn-sm-2 {
+    display: none;
+  }
+}
+

@@ -1,0 +1,256 @@
+<div class="playersData">
+  <div class="container" style="padding: 25px" *ngIf="networkDev != undefined">
+    <div class="row">
+      <div class="col-6 d-flex flex-column justify-content-between">
+        <div class="form-group row">
+          <label class="col-sm-4 col-lg-6 col-md-3 col-form-label">{{ "Screen Name" | translate }}:</label>
+          <div class="col-sm-5 col-lg-6 col-md-3 input-fields">
+            <input type="text" [(ngModel)]="networkDev.playerName" minlength="8" maxlength="32" [defaultValue]="networkDev.playerName" [value]="networkDev.playerName" class="form-control" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-4 col-lg-6 col-md-3 col-form-label">{{ "HEX code" | translate }}:</label>
+          <div class="col-sm-5 col-lg-6 col-md-3 input-fields">
+            <input type="text" [(ngModel)]="networkDev.hexCode" maxlength="6" [defaultValue]="networkDev.hexCode" [value]="networkDev.hexCode" class="form-control" />
+          </div>
+        </div>
+
+        <!-- <div class="form-group row">
+          <label class="col-sm-4 col-lg-6 col-md-3 col-form-label"
+            >{{ "Connection Interval" | translate }}:</label
+          >
+          <div class="col-sm-5 col-lg-6 col-md-3 input-fields">
+            <input
+              type="number"
+              min="0"
+              max="99"
+              oninput="validity.valid||(value='');"
+              [(ngModel)]="networkDev.connectionInterval"
+              [defaultValue]="networkDev.connectionInterval"
+              [value]="networkDev.connectionInterval"
+              class="form-control"
+            />
+          </div>
+        </div> -->
+        <div class="form-group row">
+          <label class="col-sm-4 col-lg-6 col-md-3 col-form-label">{{ "Time Zone" | translate }}:</label>
+          <div class="col-sm-5 col-lg-6 col-md-3 input-fields">
+            <select2 [data]="timeZoneItems" [value]="networkDev.timeZone" (update)="updateTimezone($event)">
+            </select2>
+          </div>
+        </div>
+        <!-- 
+        <div class="form-group row">
+          <label class="col-sm-4 col-lg-6 col-md-3 col-form-label">{{ "Media" | translate }}:</label>
+          <div class="col-sm-5 col-lg-6 col-md-3 input-fields">
+            <button nbButton status="success" style="cursor: pointer; margin: 0px 10px; cursor: pointer" (click)="openMediaSelectDialog(mediaSelectDialog)">
+              Select Media
+            </button>
+          </div>
+        </div> -->
+
+
+        <div class="form-group row">
+          <label for="editPlaylistName" class="col-sm-6 col-form-label"><strong>{{ "Select Playlist" | translate }}:</strong></label>
+          <div class="col-sm-5 input-group-sm">
+            <select [(ngModel)]="networkDev.playlistId" class="form-control custom-select mr-sm-2">
+              <option value="" style="display: none"></option>
+              <option [value]="item.id" *ngFor="let item of playlists">{{ item.name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-sm-4 col-lg-6 col-md-3 col-form-label">{{ "Description" | translate }}:</label>
+          <div class="col-sm-5 col-lg-6 col-md-3 input-fields">
+            <textarea rows="2" cols="25" type="text" [(ngModel)]="networkDev.description" placeholder="Description" class="form-control"></textarea>
+          </div>
+        </div>
+        <!-- 
+        <div class="form-group row">
+          <label class="col-sm-4 col-lg-6 col-md-3 col-form-label">{{ "Channel" | translate }}:</label>
+          <div class="col-sm-5 col-lg-6 col-md-3 input-fields">
+            <select [(ngModel)]="networkDev.channelID" (ngModelChange)="channelSelected()" class="form-control custom-select mr-sm-2">
+              <option value="" style="display: none"></option>
+              <option [value]="item.id" *ngFor="let item of channelsID">
+                {{ item.name }}
+              </option>
+            </select>
+          </div>
+        </div> -->
+
+        <div class="form-group row">
+          <label class="col-sm-6 col-form-label">Active:</label>
+          <div class="col-sm-6">
+            <nb-checkbox [(ngModel)]="networkDev.activeCheck" [value]="networkDev.activeCheck"></nb-checkbox>
+          </div>
+        </div>
+
+        <div class="form-group row" *ngIf="oldHexCode !== ''">
+          <div class="col-sm-6">
+            <h1 class="underline-heading">NetworkStatus</h1>
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="oldHexCode !== ''">
+          <label class="col-sm-4 col-lg-3 col-md-3 col-form-label">{{ "Last Contacted" | translate }}:</label>
+          <div class="col-sm-5 col-lg-3 col-md-3 input-fields">
+            <input type="text" [(ngModel)]="lastContacted" [defaultValue]="lastContacted" [value]="lastContacted" placeholder="Last Contacted" class="form-control" disabled />
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="oldHexCode !== ''">
+          <label class="col-sm-4 col-lg-3 col-md-3 col-form-label">{{ "Player version" | translate }}:</label>
+          <div class="col-sm-5 col-lg-3 col-md-3 input-fields">
+            <input type="text" [(ngModel)]="playerVersion" minlength="8" maxlength="32" [defaultValue]="playerVersion" [value]="playerVersion" placeholder="Version Number" class="form-control" disabled />
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="oldHexCode !== ''">
+          <label class="col-sm-4 col-lg-3 col-md-3 col-form-label">{{ "Status" | translate }}:</label>
+
+          <div class="form-group row">
+            <div class="col-sm-5 col-lg-3 col-md-3 input-fields status">
+              <input type="text" [(ngModel)]="online" minlength="8" maxlength="32" [defaultValue]="
+                  isOnline ? 'Online Right Now' : 'Offline Right Now'
+                " [value]="isOnline ? 'Online Right Now' : 'Offline Right Now'" [placeholder]="
+                  isOnline ? 'Online Right Now' : 'Offline Right Now'
+                " class="form-control" disabled />
+            </div>
+          </div>
+        </div>
+
+        <hr />
+        <div class="">
+          <div class="form-group row">
+            <div class="col-sm-9">
+              <h1 class="underline-heading">Player Setting</h1>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-lg-3 col-md-3 col-form-label">{{ "Offset" | translate }}:</label>
+            <div class="col-sm-5 col-lg-3 col-md-3 input-fields">
+              <div class="row" style="gap: 10px">
+                <input type="text" class="form-control" style="width: 50px" [value]="networkDev?.playerSetting?.offset?.x || ''" (change)="offsetChange($event, 'x')" />
+                <h5>x</h5>
+                <input type="text" class="form-control" style="width: 50px" [value]="networkDev?.playerSetting?.offset?.y || ''" (change)="offsetChange($event, 'y')" />
+                <h5>px</h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-lg-3 col-md-3 col-form-label">{{ "Resolution" | translate }}:</label>
+            <div class="col-sm-5 col-lg-3 col-md-3 input-fields">
+              <div class="row" style="gap: 10px">
+                <input type="text" class="form-control" style="width: 50px" [value]="
+                    networkDev?.playerSetting?.resolution?.width || ''
+                  " (change)="resolutionChange($event, 'width')" />
+                <h5>x</h5>
+                <input type="text" class="form-control" style="width: 50px" [value]="networkDev?.playerSetting?.resolution?.height || ''" (change)="resolutionChange($event, 'height')" />
+                <h5>px</h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-5 col-lg-3 col-md-3 input-fields">
+              <div class="row" style="gap: 10px; justify-content: center">
+                <label for="fit1">Fill</label>
+                <input type="radio" name="fit" id="fit1" value="fill" [checked]="checkFitStatus('fill')" (change)="fitChange($event)" />
+                <label for="fit2">Fit To Screen</label>
+                <input type="radio" name="fit" id="fit2" value="fit" [checked]="checkFitStatus('fit')" (change)="fitChange($event)" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-sm-4 col-lg-3 col-md-3 col-form-label">{{ "Transition" | translate }}:</label>
+          <div class="col-sm-5 col-lg-3 col-md-3 input-fields">
+            <div class="row" style="gap: 10px">
+              <select name="transition" id="transition" [value]="networkDev?.playerSetting?.transition" (change)="onTransitionChange($event)">
+                <option value="fade">Fade</option>
+                <option value="left-swipe">Left Swipe</option>
+                <option value="right-swipe">right Swipe</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row mt-auto mb-0">
+          <div class="col-sm-6">
+            <div class="btn-lg-3">
+              <button nbButton size="small" status="success" style="margin-right: 5px; cursor: pointer" (click)="saveNetworkDevice(networkDev)">
+                {{ "Save" | translate }}
+              </button>
+              <button nbButton size="small" status="success" (click)="clearplayermodel()" style="cursor: pointer">
+                {{ "Clear" | translate }}
+              </button>
+            </div>
+            <div class="btn-sm-2">
+              <button nbButton size="small" status="success" style="margin-right: 5px" (click)="saveNetworkDevice(networkDev)">
+                <i style="cursor: pointer" class="ion-checkmark"></i>
+              </button>
+              <button nbButton size="small" status="success" (click)="clearplayermodel()">
+                <i style="cursor: pointer" class="ion-android-refresh"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 d-flex flex-column justify-content-start">
+        <div class="row d-flex justify-content-center">
+          <button nbButton *ngIf="oldHexCode !== ''" status="success" class="takescreenshot" style="cursor: pointer" (click)="takescreenshot(PreviewDialog)">
+            Take Screenshot
+          </button>
+        </div>
+
+        <div class="row d-flex justify-content-center" style="margin-top: 10px">
+          <img *ngIf="oldHexCode !== ''" [src]="imagePath[playerId]" alt="Screen shot pic rendering failed" height="250px" width="400px" (click)="takescreenshot()" id="screenshotFrame" />
+        </div>
+
+        <div class="row d-flex justify-content-center mt-4">
+          <nb-progress-bar [value]="progressValue[playerId]" [status]="'success'" [displayValue]="true" class="progressBar topProgressBar" [class.showBar]="showProgressBar[playerId]"></nb-progress-bar>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #mediaSelectDialog let-data let-ref="dialogRef">
+  <nb-card style="width: 90vw;background-color: white; height: 90vh;">
+    <nb-card-header>
+      {{'Assign Media' | translate}}
+    </nb-card-header>
+    <nb-card-body>
+
+      <div style="width: 131px" class="mediaDialog container col-sm-2" *ngFor="let item of media">
+        <div (click)="changePlayerMedia(item)">
+          <div *ngIf="item.type == 'image/jpeg' || item.type == 'image/png'">
+            <img class="image" src="{{ item?.url }}" />
+          </div>
+          <div *ngIf="item.type == 'video/mp4' || item.type == 'video/quicktime'">
+            <img class="image" src="../../../assets/images/200.gif" *ngIf="item.height == 0" />
+            <img class="image" [src]="item.thumbnailURL || alternateImg" *ngIf="item.height != 0" />
+          </div>
+          <div *ngIf="item.type == 'html'">
+            <img class="image" src="../../../assets/images/200.gif" *ngIf="item.height == 0" />
+          </div>
+          <div class="middle">
+            <div class="row" *ngIf="networkDev?.assignedMedia && networkDev?.assignedMedia?.id == item.id">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00ff1e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check">
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+            </div>
+          </div>
+          <br />
+          <div style="font-weight: bold; text-align: center; margin-left: auto" class="dots">
+            {{item.name}}
+          </div>
+        </div>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="ref.close()">{{'Close' | translate}}</button>
+      <button nbButton style="float: right;" status="primary" (click)="saveAssignedMediaPlayer()">{{'Save' | translate}}</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>

@@ -1,0 +1,130 @@
+.form-control {
+  padding: 0.35rem 0.5rem;
+}
+select.form-control:not([size]):not([multiple]) {
+  height: calc(1.5rem + 20px);
+}
+.item {
+  margin: 0 -15px;
+  align-self: stretch;
+}
+@media screen and (max-width: 768px) {
+  .bars {
+    flex-direction: column !important;
+  }
+  .p-1 {
+    padding: 6px !important;
+  }
+  .p-2 {
+    padding: 6px !important;
+  }
+  .p-3 {
+    padding: 6px!important;
+  }
+  .p-4 {
+    padding: 6px!important;
+  }
+}
+@media screen and (max-width: 768px) {
+  .bars {
+    flex-direction: row !important;
+  }
+  .p-1 {
+    padding: 4px !important;
+  }
+  .p-2 {
+    padding: 0.5rem 15px !important;
+  }
+  .p-3 {
+    padding: 0.5rem 15px !important;
+    margin-left: 0;
+  }
+  .p-4 {
+    padding: 0.5rem 15px !important;
+  }
+  .container {
+    max-width: 100% !important;
+    min-width: 100% !important;
+  }
+  .lg {
+    display: none;
+  }
+  .sm {
+    margin-top: 15px;
+    display: inherit;
+  }
+}
+@media screen and (min-width: 768px) {
+  .sm {
+    display: none;
+  }
+  .lg {
+    margin-top: 15px;
+    display: inherit;
+  }
+}
+@media (min-width: 400px) {
+  .container {
+    max-width: 100% !important;
+    min-width: 100% !important;
+  }
+}
+.p-3 {
+  padding-top: 0 !important;
+}
+.restaurant-actions {
+  display: inline-block;
+  min-width: 60px;
+  i {
+    padding: 0 10%;
+  }
+}
+.table {
+  th {
+    white-space: nowrap;
+  }
+  td {
+    white-space: nowrap;
+  }
+}
+.container {
+  max-width: 100% !important;
+  min-width: 100% !important;
+}
+
+@media screen and (max-width: 575px) {
+  .card-add-edit-Dialogue {
+    width: 85% !important;
+    height: unset !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+@media screen and (max-width: 490px) {
+  .card-delete-Dialogue {
+    width: 80% !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .btn-lg {
+    display: none;
+  }
+  .btn-sm {
+    display: inherit;
+  }
+}
+@media screen and (min-width: 490px) {
+  .btn-lg {
+    display: inherit;
+  }
+  .btn-sm {
+    display: none;
+  }
+}
+nb-card-header {
+  display: unset !important;
+}

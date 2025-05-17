@@ -1,0 +1,173 @@
+.form-control {
+  padding: 0.35rem 0.5rem;
+}
+select.form-control:not([size]):not([multiple]) {
+  height: calc(1.5rem + 20px);
+}
+.item {
+  margin: 0 -15px;
+  align-self: stretch;
+}
+@media screen and (max-width: 768px) {
+  .bars {
+    flex-direction: row !important;
+  }
+  .p-1 {
+    padding: 4px !important;
+  }
+  .p-2 {
+    padding: 0.5rem 15px !important;
+  }
+  .p-3 {
+    padding: 0.5rem 15px !important;
+    margin-left: 0;
+  }
+  .p-4 {
+    padding: 0.5rem 15px !important;
+  }
+  .container {
+    max-width: 100% !important;
+    min-width: 100% !important;
+  }
+  .search-Bar {
+    width: 40px !important;
+    -webkit-transition: width 0.6s ease-in-out;
+    transition: width 0.6s ease-in-out;
+    border: 2px solid transparent;
+  }
+  .search-Bar:focus {
+    width: 165px !important;
+    max-width: 165px;
+  }
+  .lg {
+    display: none;
+  }
+}
+@media screen and (min-width: 768px) {
+  .sm {
+    display: none;
+  }
+  .lg {
+    display: inherit;
+  }
+}
+@media (min-width: 400px) {
+  .container {
+    max-width: 100% !important;
+    min-width: 100% !important;
+  }
+}
+.p-3 {
+    padding-top: 0 !important;
+}
+.restaurant-actions {
+  display: inline-block;
+  min-width: 110px;
+}
+.table {
+  th {
+    white-space: nowrap;
+  }
+  td {
+    white-space: nowrap;
+  }
+}
+.inner-addon {
+  position: relative;
+}
+/* style icon */
+.inner-addon .searchIcon {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* align icon */
+.left-addon .searchIcon  { left:  25px;}
+.right-addon .searchIcon { right: 0;}
+
+/* add padding  */
+.left-addon .search-Bar  { padding-left:  33px !important; }
+.right-addon input { padding-right: 30px; }
+.container {
+  max-width: 100% !important;
+  min-width: 100% !important;
+}
+@media screen and (max-width: 575px) {
+  .card-add-edit-Dialogue {
+    width: 90% !important;
+    height: 85% !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+@media screen and (max-width: 490px) {
+  .card-delete-Dialogue {
+    width: 80% !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .btn-lg {
+    display: none;
+  }
+  .btn-sm {
+    display: inherit;
+  }
+}
+@media screen and (min-width: 490px) {
+  .btn-lg {
+    display: inherit;
+  }
+  .btn-sm {
+    display: none;
+  }
+}
+@media screen and (max-width: 350px) {
+  .card-add-edit-Dialogue {
+    width: 95% !important;
+    height: 85% !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .btn-lg-2 {
+    display: none;
+  }
+  .btn-sm-2 {
+    display: inherit;
+  }
+}
+@media screen and (min-width: 350px) {
+  .btn-lg-2 {
+    display: inherit;
+  }
+  .btn-sm-2 {
+    display: none;
+  }
+}
+nb-card-header {
+  display: unset !important;
+}
+
+.active-searchBar {
+  border-color: #262626;
+  width: 100%;
+  padding-left: 33px !important;
+  max-width: 165px;
+}
+
+input:invalid {
+  border: 3px solid red;
+}
+
+.filenameTruncate {
+
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

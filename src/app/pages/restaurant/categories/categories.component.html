@@ -1,0 +1,156 @@
+<div class = "row" style="width:100%; height:100%;" >
+  <div class="container">
+      <div class="d-flex flex-row bars">
+        <div class="p-2" style="margin-top:2.1%;"><label><b>{{'Filter' | translate}}</b></label>
+        </div>
+        <div class="p-4 item" style="margin-top:0.4%;"> <input type="text" nbInput fullWidth fieldSize="tiny" placeholder="{{'Enter your keyword' | translate}}"  style="padding: 5px;"></div>
+        <div class="p-3 item" style="margin-right: -7px; margin-top: 11px;">
+          <select placeholder="Select" class="form-control" style="height:30px;">
+            <option value="Media Rights">{{'Media Rights' | translate}}</option>
+            <option value="ImageNameOriginals">{{'Image Name' | translate}}</option>
+            <option value="username">{{'Username' | translate}}</option>
+            <option value="Firstname">{{'First name' | translate}}</option>
+            <option value="LastName">{{'LastName' | translate}}</option>
+            <option value="Email">{{'Email' | translate}}</option>
+            <option value="RoleGrid">{{'Role' | translate}}</option>
+            <option value="Phone">{{'Phone' | translate}}</option>
+            <option value="Active">{{'Active' | translate}}</option>
+            <option value="Phone">{{'Phone' | translate}}</option>
+            <option value="IsReencode">{{'RenCode' | translate}}</option>
+            <option value="PictureURl">{{'Image' | translate}}</option>
+          </select>
+        </div>
+        <!-- <div class="p-3 item" style="margin-right: -7px; margin-top: 11px;">
+          <select placeholder="Select Showcase" class="form-control" style="height:30px;">
+            <option value="">Option empty</option>
+            <option value="0">Option 0</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+            <option value="4">Option 4</option>
+          </select>
+        </div> -->
+        <div class="p-3 item" style="margin-top:0.95%;"><button nbButton size="small" status="success"  class="ion-android-add"  style="height:30px; padding-top: 6px;" (click)="add(CategoryDialog, undefined)">&nbsp; Add</button></div>
+      </div>
+
+    <div>
+      <table class="table table-striped"style="margin-top: 20px;">
+        <thead>
+        <tr>
+          <th scope="col">{{'Category Name' | translate}}</th>
+          <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>{{'Mark' | translate}}</td>
+          <td>
+            <div style="display: inline-block;">
+              <i class="icons-playlist ion-edit" (click)="edit(EditDialog, undefined)" ></i>
+              <br/>
+              <i class="icons-playlist ion-trash-b" (click)="delete(DeleteDialog, undefined)" ></i>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>{{'Mark' | translate}}</td>
+          <td>
+            <div style="display: inline-block;">
+              <i class="icons-playlist ion-edit" (click)="edit(EditDialog, undefined)"></i>
+              <br/>
+              <i class="icons-playlist ion-trash-b" (click)="delete(DeleteDialog, undefined)" ></i>
+            </div>
+          </td>
+        </tr>
+
+
+        </tbody>
+      </table>
+      <div class="row" style="margin-top: 0; width:100%; height:30px; float:right;background: #cbcbcb;">
+        <div class="d-flex flex-row-reverse">
+          <div class="p-4" style="margin-top: -1.95%;"><label>{{'Displaying 1 to 3 of 3 items' | translate}}</label></div>
+          <div class="p-1" style="margin-top: 0.5%;">|</div>
+          <div class="p-2"><i class="ion-android-sync" ></i> </div>
+          <div class="p-1" style="margin-top: 0.5%;">|</div>
+          <div class="p-2" style="margin-top: -1px;">
+            <select>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="p-4"style="margin-top: -1.75%;">{{'Records per page' | translate}}:</div>
+          <div class="p-1" style="margin-top: 0.5%;">|</div>
+          <div class="p-2"><i class="ion-skip-forward" ></i> </div>
+          <div class="p-2"><i class="ion-ios-fastforward" ></i> </div>
+          <div class="p-1" style="margin-top: 0.5%;">|</div>
+          <div class="p-2">of 1</div>
+          <div class="p-1">
+            <input type="text" tabindex="0" style="width: 25px;" >
+          </div>
+          <div class="p-2">{{'Page' | translate}}</div>
+          <div class="p-1" style="margin-top: 0.5%;">|</div>
+          <div class="p-2" style="margin-top: -1px;"><i class="ion-ios-rewind"></i></div>
+          <div class="p-2"><i class="ion-skip-backward" ></i> </div>
+
+
+        </div>
+      </div>
+      <ng-template #EditDialog let-data let-ref="dialogRef">
+        <nb-card style="width: 450px; height: 200px;">
+          <nb-card-header>{{'Edit Category' | translate}}</nb-card-header>
+          <nb-card-body>
+            <div class="form-group row">
+              <label class="col-sm-5 col-form-label"><strong>{{'Edit Category' | translate}}:</strong></label>
+              <div class="col-sm-7 input-group-sm">
+                <input type="text" fieldSize="small" fullWidth class="form-control" >
+              </div>
+            </div>
+
+
+          </nb-card-body>
+          <nb-card-footer>
+            <button nbButton (click)="ref.close()">{{'Close' | translate}}</button>
+            <button nbButton style="float: right;" status="primary">{{'Save' | translate}}</button>
+          </nb-card-footer>
+        </nb-card>
+
+      </ng-template>
+
+      <ng-template #CategoryDialog let-data let-ref="dialogRef">
+        <nb-card style="width: 410px; height: 200px;">
+          <nb-card-header>{{'Add Category' | translate}}</nb-card-header>
+          <nb-card-body>
+            <div class="form-group row">
+              <label class="col-sm-5 col-form-label"><strong>{{'Category name' | translate}}:</strong></label>
+              <div class="col-sm-7 input-group-sm">
+                <input type="text" fieldSize="small" fullWidth class="form-control" >
+              </div>
+            </div>
+
+
+          </nb-card-body>
+          <nb-card-footer>
+            <button nbButton (click)="ref.close()">{{'Close' | translate}}</button>
+            <button nbButton style="float: right;" status="primary">{{'Save' | translate}}</button>
+          </nb-card-footer>
+        </nb-card>
+
+      </ng-template>
+
+      <ng-template #DeleteDialog let-data let-ref="dialogRef">
+        <nb-card>
+          <nb-card-header>{{'Confirm Delete' | translate}}</nb-card-header>
+          <nb-card-body>{{'Are you sure you want to delete this record?' | translate}}</nb-card-body>
+          <nb-card-footer>
+            <button nbButton (click)="ref.close()">Close</button>
+            <button nbButton style="float: right;" status="danger" (click)="deleteM(data)">{{'Delete' | translate}}</button>
+          </nb-card-footer>
+        </nb-card>
+      </ng-template>
+
+    </div>
+  </div>
+</div>
+

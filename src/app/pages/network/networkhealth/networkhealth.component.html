@@ -1,0 +1,123 @@
+<div class = 'container'>
+        <div class="row networkHealthSection">
+                <div class="col-12 field-container" style = 'display:inherit;'>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="col-lg-5 col-md-5 col-sm-5 col-xs-12 networkHealthSectionLabel">{{'Last Contacted' | translate}}:</label>
+                            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 disabled-fields">
+                              <input *ngIf="nh == ''" type="text" disabled="disabled" value="none" class="form-control" id="lastContacted" name="lastContacted">
+                              <input *ngIf="nh != ''" type="text" disabled="disabled" [value]="nh.lastContacted" class="form-control" id="lastContacted" name="lastContacted">
+                            </div>
+                        </div>
+
+                        <!--
+                        <div class="form-group">
+                            <label class="col-lg-5 col-md-5 col-sm-5 col-xs-12 networkHealthSectionLabel">Playlist Generated:</label>
+                            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12">
+                                <input type="text" disabled="disabled" class="form-control" id="playlistGenerated" name="playlistGenerated">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-5 col-md-5 col-sm-5 col-xs-12 networkHealthSectionLabel">Published Changes:</label>
+                            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12">
+                                <input type="text" disabled="disabled" class="form-control" id="publishedChanges" name="publishedChanges">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-5 col-md-5 col-sm-5 col-xs-12 networkHealthSectionLabel">Subscription Expiry:</label>
+                            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12">
+                                <input type="text" disabled="disabled" class="form-control" id="subscriptionExpiry" name="subscriptionExpiry">
+                            </div>
+                        </div>
+                        -->
+
+                        <div class="form-group">
+                            <label class="col-lg-5 col-md-5 col-sm-5 col-xs-12 networkHealthSectionLabel">Player Version:</label>
+                            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 disabled-fields">
+                                <input *ngIf="nh == ''" type="text" disabled="disabled" class="form-control" value="none" id="playerVersion" name="playerVersion">
+                                <input *ngIf="nh != ''" type="text" disabled="disabled" class="form-control" [value]="nh.playerVersion" id="playerVersion" name="playerVersion">
+                            </div>
+                        </div>
+
+                        <!--<div class="col-xs-12 live_view_div">
+                            <h2>Viewer</h2>
+                            <div>  -->
+                                <!--<img src="images/09-05-2017 07-43-02.png"  height="350" />-->
+                                <!--<img src="images/08-05-2017 17-19-39.png" height="350" />-->
+                               <!-- <img id="ImgLiveView" height="350">
+                            </div>
+                            <div class="footer_text"><span>0.3378</span> seconds since last update</div>
+                        </div>-->
+
+                    </div>
+                    <div class="col-md-12 player_information" style="float: left;">
+                        <div class="col-xs-12 player_information_header">{{'Player information' | translate}}</div>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{'System Version' | translate}}</th>
+                                    <th>{{'Player Version' | translate}}</th>
+                                    <th>{{'Device Model' | translate}}</th>
+                                    <th>{{'MAC' | translate}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="SystemVer">{{'None' | translate}}</td>
+                                    <td *ngIf="nh == ''" id="PlayerVer">{{'None' | translate}}</td>
+                                    <td *ngIf="nh != ''" id="PlayerVer">{{nh.playerVersion}}</td>
+                                    <td id="DeviceMod">{{'None' | translate}}</td>
+                                    <td id="Mac_Id">{{'None' | translate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{'Timezone' | translate}}</th>
+                                    <th>{{'Last Seen' | translate}}</th>
+                                    <th>{{'Server Content Change' | translate}}</th>
+                                    <th>{{'Player Content Sync' | translate}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="nh.isOnline">
+                                    <td id="TimeZonez">{{'None' | translate}}</td>
+                                    <td id="LastSeens" style="background-color: rgba(171, 217, 171, 0.76);">{{'Online Right now' | translate}}</td>
+                                    <td id="ServerChange" style="background-color: rgba(171, 217, 171, 0.76);">{{nh.lastContacted}}</td>
+                                    <td id="playerContentS" style="background-color: rgba(171, 217, 171, 0.76);">{{nh.lastContacted}}</td>
+                                </tr>
+
+                                <tr *ngIf="!nh.isOnline">
+                                  <td id="TimeZonez">None</td>
+                                  <td id="LastSeens" style="background-color: #ff0115;">{{'Offline Right now' | translate}}</td>
+                                  <td id="ServerChange" style="background-color: #ff0115;">{{nh.lastContacted}}</td>
+                                  <td id="playerContentS" style="background-color: #ff0115;">{{nh.lastContacted}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{'Last IP' | translate}}</th>
+                                    <th>{{'Last Local IP' | translate}}</th>
+                                    <th>{{'Last Location' | translate}}</th>
+                                    <th>{{'Screen Resolution' | translate}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="Lastz">{{'None' | translate}}</td>
+                                    <td id="LasrLocIP">{{'Unknown' | translate}}</td>
+                                    <td id="LastLocs">{{'None' | translate}}</td>
+                                    <td id="ScrrenRes">{{'None' | translate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+</div>
