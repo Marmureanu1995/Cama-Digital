@@ -71,7 +71,7 @@
     "moment": "^2.29.1",
     "nebular-icons": "1.1.0",
     "ng2-dragula": "^2.1.1",
-    "ngx-image-compress": "^11.0.3",
+    "ngx-image-compress": "^1.0.3",
     "node-gyp": "^9.4.0",
     "normalize.css": "6.0.0",
     "pace-js": "1.0.2",
@@ -111,7 +111,6 @@
     "stylelint": "7.13.0",
     "ts-node": "3.2.2",
     "tslint": "5.7.0",
-    "tslint-language-service": "^0.9.9",
     "typescript": "3.2.4",
     "webpack": "^4.31.0"
   }
