@@ -36,7 +36,6 @@
   },
   "dependencies": {
     "@agm/core": "^1.0.0",
-    "@agm/markerclusterer": "^3.0.0-beta.0",
     "@angular-devkit/build-webpack": "^0.13.9",
     "@angular/animations": "^7.2.11",
     "@angular/cdk": "^7.3.6",
