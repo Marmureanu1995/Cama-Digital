@@ -1,0 +1,100 @@
+<div id="check" class="cards">
+    <div class="row card1" style="margin-bottom: -17px;">
+        <nb-card style="min-height: 100px;">
+            <nb-card-body style="min-height: 100px;">
+                <h5 class="playlist_heading">{{defaultChannel.name}}</h5>
+                <div class="flex" style="min-height: 100px;">
+                    <div style="min-height: 100px;" dragula="channel_association" [dragulaModel]="PlayersList" id="top">
+                      <div class="container_div" *ngFor="let item of PlayersList; async let i = index">
+                        <div *ngIf="PlayersList?.length > 0 else emptychannel">
+                        <!-- <div *ngIf="item.media?.length > 0; else emptyPlaylist">
+                          <div *ngIf="item.media[0]?.type == 'image/jpeg' || item.media[0]?.type == 'image/png'">
+                            <img class="image" src="{{item.media[0]?.url}}">
+                          </div>
+                          <div *ngIf="item.media[0]?.type == 'video/mp4' || item.media[0]?.type == 'video/quicktime'">
+                            <img class="image" [src]="item.media[0]?.thumbnailURL" />
+                          </div>
+                          <div *ngIf="item.media[0]?.type == 'html'">
+                            <iframe class="image" [src]="item.media[0]?.url | ngxSafeHtml: 'resourceUrl'"></iframe>
+                          </div>
+                        </div> -->
+                        <img class="image_playlist" src="/assets/images/no_playlist.png">
+                        <br>
+                        <p class="DragDropContent dots">{{item?.playerName}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                <ng-template #emptyPlaylist>
+                    <span style="font-weight: bold; text-align: center;">{{'Drag drop from bottom to associate channel' | translate}}</span>
+                </ng-template>
+            </nb-card-body>
+        </nb-card>
+    </div>
+
+    <div class="card1 row" id="div2">
+
+        <nb-card>
+          <nb-card-body style="min-height:400px!important;">
+            <h5 style="padding :5px;margin-left: 1%;margin-bottom:2%;">{{'Connected Players' | translate}}</h5>
+            <div class="flex" >
+              <div class="container" dragula="channel_association" [dragulaModel]="AllPlayersListDragula" id="bottom">
+                <div class="container_div_playlist" *ngFor="let player of AllPlayersListDragula">
+                  <div *ngIf="AllPlayersListDragula?.length > 0; else emptyPlayerlist">
+                    <!-- <div *ngIf="player.media[0]?.type == 'image/jpeg' || player.media[0]?.type == 'image/png'">
+                      <img class="image_playlist" src="{{player.media[0]?.url}}">
+                    </div>
+                    <div *ngIf="player.videoCheck">
+                      <img class="image" [src]="player.media[0]?.thumbnailURL" />
+                    </div>
+                    <div *ngIf="player.media[0]?.type == 'html'">
+                      <iframe class="image" [src]="player.media[0]?.url | ngxSafeHtml: 'resourceUrl'"></iframe>
+                    </div> -->
+                    <img class="image_playlist" src="/assets/images/no_playlist.png">
+                  </div>
+                  <ng-template #emptyPlayerlist>
+                    <img class="image_playlist" src="/assets/images/no_playlist.png">
+                  </ng-template>
+                  <br>
+                  <p class="DragDropContent dots">{{player.playerName}}</p>
+                </div>
+              </div>
+            </div>
+            <button nbButton [hidden]="true" id="myButton" (click)="ConfirmationModal(CopyPlayerConfirmationDialog)"></button>
+            <ng-template  #CopyPlayerConfirmationDialog let-data let-ref="dialogRef">
+              <nb-card>
+                <nb-card-header>{{'Associate Player' | translate}}</nb-card-header>
+                <nb-card-body>{{'This player is already connected to another channel. Are you sure you want to associate the player with this channel?' | translate}}</nb-card-body>
+                <nb-card-footer>
+                  <button nbButton (click)="ref.close()">{{'Cancel' | translate}}</button>
+                  <button nbButton style="float: right;" status="danger" (click)="savePlayertoDB();ref.close()">{{'Ok' | translate}}</button>
+                </nb-card-footer>
+              </nb-card>
+            </ng-template>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+    <!-- <button id="mybutton" data-target="#Confirmation-Modal" data-toggle="modal">Cancel</button> -->
+    
+
+
+<!-- <div class="modal fade" id="Confirmation-Modal" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Associate Player</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+      <p>This player is already connected to another channel. Are you sure you want to associate the player with this channel?</p>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-primary btn-login">Cancel</button>
+        <button type="button" class="btn btn-primary btn-login" data-dismiss="modal" (click)="HideModal()">Ok</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+

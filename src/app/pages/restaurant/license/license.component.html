@@ -1,0 +1,137 @@
+<div class = "row" style="width:100%; height:100%;" >
+  <div class="container">
+      <div class="d-flex flex-row bars">
+        <div class="p-3 item" style="margin-top:0.95%;"><button nbButton size="small" status="success" style="height:30px; padding-top: 6px;"  class="ion-android-add"  (click)="add(LicenseDialog, undefined)">&nbsp; Add</button></div>
+      </div>
+    <div>
+      <table class="table table-striped"style="margin-top: 20px;">
+        <thead>
+        <tr>
+          <th scope="col">{{'Start Date' | translate}}</th>
+          <th scope="col">{{'Expiry Date' | translate}}</th>
+          <th scope="col">{{'Windows Player' | translate}}</th>
+          <th scope="col">{{'Android Player' | translate}}</th>
+          <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>{{'Mark' | translate}}</td>
+          <td>{{'Mark' | translate}}</td>
+          <td>{{'Mark' | translate}}</td>
+          <td>{{'Mark' | translate}}</td>
+          <td>{{'Mark' | translate}}</td>
+          <td>
+            <div style="display: inline;">
+              <i class="ion-edit" style="margin-right: 8px;" (click)="edit(EditDialog, undefined)" ></i>
+              <i class="ion-trash-b" style="margin-right: 8px;" (click)="delete(DeleteDialog, undefined)" ></i>
+              <i class="ion-unlocked" style="margin-right: 8px;" (click)="deactivate(DeactivateDialog,undefined)" ></i>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>{{'Mark' | translate}}</td>
+          <td>{{'Mark' | translate}}</td>
+          <td>{{'Mark' | translate}}</td>
+          <td>{{'Mark' | translate}}</td>
+          <td>{{'Mark' | translate}}</td>
+          <td>
+            <div style="display: inline;">
+              <i class="ion-edit" style="margin-right: 8px;" (click)="edit(EditDialog, undefined)" ></i>
+              <i class="ion-trash-b" style="margin-right: 8px;" (click)="delete(DeleteDialog, undefined)" ></i>
+              <i class="ion-unlocked" style="margin-right: 8px;" (click)="deactivate(DeactivateDialog, undefined)" ></i>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="row" style="margin-top: 0; width:100%; height:30px; float:right;background: #cbcbcb;">
+        <div class="d-flex flex-row-reverse">
+          <div class="p-4" style="margin-top: -1.95%;"><label>{{'Displaying 1 to 3 of 3 items' | translate}}</label></div>
+          <div class="p-1" style="margin-top: 0.5%;">|</div>
+          <div class="p-2"><i class="ion-android-sync" ></i> </div>
+          <div class="p-1" style="margin-top: 0.5%;">|</div>
+          <div class="p-2" style="margin-top: -1px;">
+            <select>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="p-4"style="margin-top: -1.75%;">{{'Records per page' | translate}}:</div>
+          <div class="p-1" style="margin-top: 0.5%;">|</div>
+          <div class="p-2"><i class="ion-skip-forward" ></i> </div>
+          <div class="p-2"><i class="ion-ios-fastforward" ></i> </div>
+          <div class="p-1" style="margin-top: 0.5%;">|</div>
+          <div class="p-2">of 1</div>
+          <div class="p-1">
+            <input type="text" tabindex="0" style="width: 25px;" >
+          </div>
+          <div class="p-2">{{'Page' | translate}}</div>
+          <div class="p-1" style="margin-top: 0.5%;">|</div>
+          <div class="p-2" style="margin-top: -1px;"><i class="ion-ios-rewind"></i></div>
+          <div class="p-2"><i class="ion-skip-backward" ></i> </div>
+        </div>
+      </div>
+      <ng-template #EditDialog let-data let-ref="dialogRef">
+        <nb-card style="width: 450px; height: 200px;">
+          <nb-card-header>{{'Edit License' | translate}}</nb-card-header>
+          <nb-card-body>
+            <div class="form-group row">
+              <label class="col-sm-5 col-form-label"><strong>{{'Edit License' | translate}}:</strong></label>
+              <div class="col-sm-7 input-group-sm">
+                <input type="text" fieldSize="small" fullWidth class="form-control" >
+              </div>
+            </div>
+          </nb-card-body>
+          <nb-card-footer>
+            <button nbButton (click)="ref.close()">Close</button>
+            <button nbButton style="float: right;" status="primary">Save</button>
+          </nb-card-footer>
+        </nb-card>
+      </ng-template>
+      <ng-template #LicenseDialog let-data let-ref="dialogRef">
+        <nb-card style="width: 410px; height: 200px;">
+          <nb-card-header>Add License</nb-card-header>
+          <nb-card-body>
+            <div class="form-group row">
+              <label class="col-sm-5 col-form-label"><strong>License Key:</strong></label>
+              <div class="col-sm-7 input-group-sm">
+                <input type="text" fieldSize="small" fullWidth class="form-control" >
+              </div>
+            </div>
+          </nb-card-body>
+          <nb-card-footer>
+            <button nbButton (click)="ref.close()">{{'Close' | translate}}</button>
+            <button nbButton style="float: right;" status="primary">{{'Save' | translate}}</button>
+          </nb-card-footer>
+        </nb-card>
+      </ng-template>
+
+      <ng-template #DeactivateDialog let-data let-ref="dialogRef">
+        <nb-card>
+          <nb-card-header>{{'Confirm Deactivate' | translate}}</nb-card-header>
+          <nb-card-body>{{'Do you want to deactivate this license??' | translate}}</nb-card-body>
+          <nb-card-footer>
+            <button nbButton (click)="ref.close()">{{'Close' | translate}}</button>
+            <button nbButton style="float: right;" status="danger" >{{'Deactivate' | translate}}</button>
+          </nb-card-footer>
+        </nb-card>
+      </ng-template>
+
+      <ng-template #DeleteDialog let-data let-ref="dialogRef">
+        <nb-card>
+          <nb-card-header>{{'Confirm Delete' | translate}}</nb-card-header>
+          <nb-card-body>{{'Are you sure you want to delete this record?' | translate}}</nb-card-body>
+          <nb-card-footer>
+            <button nbButton (click)="ref.close()">{{'Close' | translate}}</button>
+            <button nbButton style="float: right;" status="danger" (click)="deleteM(data)">{{'Delete' | translate}}</button>
+          </nb-card-footer>
+        </nb-card>
+      </ng-template>
+
+    </div>
+  </div>
+</div>
+

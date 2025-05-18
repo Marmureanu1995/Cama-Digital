@@ -1,0 +1,9 @@
+<nb-card>
+    <nb-card-header>{{'Channels' | translate}}</nb-card-header>
+    <nb-card-body>{{'Do you want to save pending publish changes?' | translate}}</nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="ref.close('No')">{{'No' | translate}}</button>
+      <button nbButton style="float: right;" status="danger"
+        (click)="ref.close('Yes')">{{'Yes' | translate}}</button>
+    </nb-card-footer>
+  </nb-card>

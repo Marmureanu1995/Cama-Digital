@@ -1,0 +1,1923 @@
+<div class="row" style="width: 100%">
+  <ngx-topBar></ngx-topBar>
+  <nb-card class="col-sm-12" style="padding-left: 0; padding-right: 0" [nbSpinner]="mediaLoading" nbSpinnerStatus="danger">
+    <nb-card-body class="col-sm-12">
+      <h3></h3>
+      <div style="margin-bottom: 2%" class="row col-sm-12">
+        <div style="margin-top: -0.6%; padding-left: 0" class="col-sm-6 col-8 col-md-4 col-lg-4">
+          <button *ngIf="displayMode === 2" type="button" style="
+              background-color: transparent;
+              width: autocompanies;
+              justify-content: flex-start;
+              padding-left: 0;
+              margin-left: 0;
+              color:white;
+            " class="btn btn-success btn-icon" (click)="onDisplayModeChange(1)">
+            <strong class="btn-lg" style="font-size: 12px; color: black">{{ "Change View" | translate }}: &nbsp;</strong>
+            <i style="color: black" class="nb-grid-b"></i>
+          </button>
+          <button *ngIf="displayMode === 1" type="button" style="
+              background-color: transparent;
+              width: auto;
+              justify-content: flex-start;
+              padding-left: 0;
+              margin-left: 0;
+              color:white;
+            " class="btn btn-success btn-icon" (click)="onDisplayModeChange(2)">
+            <strong class="btn-lg" style="font-size: 12px; color: black">{{ "Change View" | translate }}: &nbsp;</strong>
+            <i style="color: black" class="nb-list"></i>
+          </button>
+        </div>
+
+        <!-- ADDING REFRESH SINAGE BUTTON -->
+
+        <div class="col-md-auto col-4 col-md-4 col-lg-4">
+          <button *ngIf="showSinage" type="button" (click)="onSinageFeedSubmit()" style="width: auto; border-radius: 8% !important; float: right" class="btn btn-md btn-primary">
+            <strong class="btn-lg" style="font-size: 12px; color: black">{{
+              "Refresh Signage" | translate
+              }}</strong>
+            <i style="cursor: pointer; font-size: 25px; margin-top: -8px" class="ion-android-download btn-sm"></i>
+          </button>
+
+
+          <button type="button" style="
+              background-color: #262626;
+              width: auto;
+              border-radius: 8% !important;
+              float: right;
+              margin-right: 10px;
+              margin-left: 3%;
+              color:white;
+            " class="btn btn-md btn-primary" [nbPopover]="popmenu" nbPopoverPlacement="bottom">
+            <strong class="btn-lg" style="font-size: 12px; color: white; text-align: center">{{ "Upload" | translate }}</strong>
+            <i style="cursor: pointer; font-size: 25px; margin-top: -8px" class="ion-android-upload btn-sm"></i>
+          </button>
+          <strong *ngIf="currentFolder" style="
+          width: auto;
+          border-radius: 8% !important;
+          float: none;
+          margin-right: 10px;
+          margin-left: 3%;
+        ">
+            Folder Name: {{currentFolder?.name}}
+          </strong>
+          <button *ngIf="!currentFolder" type="button" style="
+          background-color: #262626;
+          width: auto;
+          border-radius: 8% !important;
+          float: right;
+          margin-right: 10px;
+          margin-left: 3%;
+          color:white;
+        " class="btn btn-md btn-primary" (click)="openAddFolderModal(AddFolderDialog)">
+            <strong class="btn-lg" style="font-size: 12px; color: white; text-align: center">{{ "Add A Folder" | translate }}</strong>
+            <i style="cursor: pointer; font-size: 25px; margin-top: -8px" class="ion-android-upload btn-sm"></i>
+          </button>
+
+
+
+          <button *ngIf="currentFolder" type="button" style="
+            background-color: #262626;
+            width: auto;
+            border-radius: 8% !important;
+            float: right;
+            margin-right: 10px;
+            margin-left: 3%;
+            
+            " class="btn btn-md btn-primary" (click)="backFolder()">
+            <strong class="btn-lg" style="font-size: 12px; color: white; text-align: center">{{ "Back" | translate }}</strong>
+            <i style="cursor: pointer; font-size: 25px; margin-top: -8px" class="ion-android-upload btn-sm"></i>
+          </button>
+
+
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 col-12 btn-lg">
+          <div class="col-sm-6 col-md-6 col-lg-6 col-6" style="min-width: 120px; padding-left: 0">
+            <nb-select [(ngModel)]="selectedValue" (selectedChange)="onSelection($event)" style="font-size: 10px" outline status="success" size="xsmall" placeholder="Sort">
+              <nb-option-group title="Media">
+                <nb-option value="Newest">{{ "Newest" | translate }}</nb-option>
+                <nb-option value="Oldest">{{ "Oldest" | translate }}</nb-option>
+                <nb-option value="A-Z">{{ "A-Z" | translate }}</nb-option>
+              </nb-option-group>
+              <nb-option-group title="Type">
+                <nb-option value="image">{{ "Image" | translate }}</nb-option>
+                <nb-option value="video">{{ "Video" | translate }}</nb-option>
+                <nb-option value="html">{{ "HTML" | translate }}</nb-option>
+                <nb-option value="audio">{{ "Audio" | translate }}</nb-option>
+                <nb-option value="widget">{{ "Widget" | translate }}</nb-option>
+              </nb-option-group>
+              <nb-option-group title="Category">
+                <nb-option *ngFor="let cat of categories | async">{{
+                  cat.categoryName
+                  }}</nb-option>
+              </nb-option-group>
+            </nb-select>
+          </div>
+          <div style="float: right" class="col-sm-6 input-group-sm col-md-6 col-lg-6 col-6">
+            <input type="text" style="border-color: #262626" fieldSize="xsmall" class="form-control" id="searchBar" [(ngModel)]="searchValue" (ngModelChange)="search()" placeholder="Search" />
+          </div>
+        </div>
+        <!-- Mobile Screen -->
+        <div class="col-sm-12 col-md-6 col-lg-4 col-12 btn-sm" style="padding-left: 0">
+          <div style="width: auto">
+            <div class="inner-addon left-addon col-sm-6 input-group-sm col-md-6 col-lg-6 col-6">
+              <i style="cursor: pointer; font-size: 25px" class="ion-android-search searchIcon"></i>
+              <input class="search-Bar" type="text" nbInput fullWidth fieldSize="tiny" [(ngModel)]="searchValue" (ngModelChange)="search()" [ngClass]="{
+                  'active-searchBar': searchValue !== '',
+                  'search-Bar': searchValue === ''
+                }" style="padding: 5px; min-height: 31px; max-height: 31px" />
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-6 col-lg-6 col-6" style="min-width: 120px; padding-right: 0; margin-left: auto">
+            <nb-select [(ngModel)]="selectedValue" (selectedChange)="onSelection($event)" style="font-size: 10px" outline status="success" size="xsmall" placeholder="Sort">
+              <nb-option-group title="Media">
+                <nb-option value="Newest">{{ "Newest" | translate }}</nb-option>
+                <nb-option value="Oldest">{{ "Oldest" | translate }}</nb-option>
+                <nb-option value="A-Z">{{ "A-Z" | translate }}</nb-option>
+              </nb-option-group>
+              <nb-option-group title="Type">
+                <nb-option value="image">{{ "Image" | translate }}</nb-option>
+                <nb-option value="video">{{ "Video" | translate }}</nb-option>
+                <nb-option value="html">{{ "HTML" | translate }}</nb-option>
+                <nb-option value="audio">{{ "Audio" | translate }}</nb-option>
+                <nb-option value="widget">{{ "Widget" | translate }}</nb-option>
+              </nb-option-group>
+              <nb-option-group title="Category">
+                <nb-option *ngFor="let cat of categories | async">{{
+                  cat.categoryName
+                  }}</nb-option>
+              </nb-option-group>
+            </nb-select>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="displayMode === 1">
+        <div *ngIf="!currentFolder">
+          <div style="width: 131px;cursor: pointer;" class="container col-sm-2" *ngFor="let folder of allFolders; trackBy: trackByEmpCode">
+            <div>
+              <img class="image" src="../../../assets/images/folder.png" />
+              <div class="middle">
+                <div class="row">
+                  <button type="button" class="btn btn-md btn-primary btn-icon" (click)="changeFolder(folder)">
+                    <i class="ion-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-md btn-danger btn-icon" (click)="deleteFolderShowModal(DeleteFolder, folder)">
+                    <i class="ion-trash-b"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div style="font-weight: bold; text-align: center; margin-left: auto" class="dots" (click)="changeFolder(folder)">
+              {{folder.name}}
+            </div>
+          </div>
+        </div>
+        <div style="width: 131px" class="container col-sm-2" *ngFor="let item of pagedItems; trackBy: trackByEmpCode">
+          <div>
+            <div *ngIf="item.type == 'image/jpeg' || item.type == 'image/png'">
+              <img class="image" src="{{ item?.url }}" />
+            </div>
+
+
+            <div *ngIf="item.type == 'video/mp4' || item.type == 'video/quicktime'">
+              <img class="image" src="../../../assets/images/200.gif" *ngIf="item.height == 0" />
+              <img class="image" [src]="item.thumbnailURL || alternateImg" *ngIf="item.height != 0" />
+            </div>
+            <div *ngIf="item.type == 'html'" draggable="true">
+              <div *ngIf="item.url.includes('allurerealestate')">
+                <img *ngIf="item.pictures[0]" class="image" [src]="item.pictures[0]" />
+                <img *ngIf="!item.pictures[0]" class="image" [src]="alternateImg" />
+              </div>
+              <img class="image" *ngIf="item.forecastdays == 4" src="../../../assets/images/Weather3day.png" />
+              <img class="image" *ngIf="item.forecastdays == 5" src="../../../assets/images/Weather4day.png" style="width: 100%" />
+              <img class="image" *ngIf="item.forecastdays == 1" src="../../../assets/images/currentweather.png" />
+              <img class="image" *ngIf="
+                  item.forecastdays != 4 &&
+                  item.forecastdays != 5 &&
+                  item.forecastdays != 1 &&
+                  !item.url.includes('allurerealestate')
+                " [src]="alternateHtml" />
+            </div>
+            <div class="middle">
+              <div class="row">
+                <button type="button" class="btn btn-md btn-primary btn-icon" (click)="open2(dialog, item)">
+                  <i class="ion-information"></i>
+                </button>
+                <button type="button" class="btn btn-md btn-primary btn-icon" (click)="open(PreviewDialog, item)">
+                  <i class="ion-eye"></i>
+                </button>
+
+              </div>
+              <div class="row">
+                <button type="button" class="btn btn-md btn-success btn-icon" (click)="open3(EditDialog, item)">
+                  <i class="ion-edit"></i>
+                </button>
+
+                <button type="button" class="btn btn-md btn-danger btn-icon" (click)="deleteMedia(DeleteDialog, item)">
+                  <i class="ion-trash-b"></i>
+                </button>
+              </div>
+            </div>
+            <br />
+            <div style="font-weight: bold; text-align: center; margin-left: auto" class="dots">
+              {{
+              item.name
+              }}
+            </div>
+          </div>
+
+          <ng-template #load>
+            <div (click)="notSupported(item)">
+              <img class="image" src="https://img.icons8.com/ios-filled/1024000/000000/not-applicable.png" />
+              <div class="middle">
+                <div class="row">
+                  <button type="button" class="btn btn-md btn-primary btn-icon" (click)="open2(dialog, item)">
+                    <i class="ion-information"></i>
+                  </button>
+                  <button type="button" class="btn btn-md btn-primary btn-icon">
+                    <i class="ion-eye"></i>
+                  </button>
+                </div>
+                <div class="row">
+                  <button type="button" class="btn btn-md btn-success btn-icon">
+                    <i class="ion-edit"></i>
+                  </button>
+                  <button type="button" class="btn btn-md btn-danger btn-icon" (click)="deleteMedia(DeleteDialog, item)">
+                    <i class="ion-trash-b"></i>
+                  </button>
+                </div>
+              </div>
+              <br />
+              <div style="font-weight: bold; text-align: center; margin-left: auto" class="dots" [class.dot-CardTitle]="item.name.length > 11">
+                {{
+                item.name
+                }}
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <!--list view-->
+      <div *ngIf="displayMode === 2">
+        <div class="container col-sm-12 list-view-sm">
+          <div *ngFor="let item of pagedItems; let i = index">
+            <div style="background-color: #aaaaaa; border-radius: 5px" class="row row-sm" *ngIf="i % 2 == 0">
+              <div style="margin-top: 1%" class="col-sm-5 col-5">
+                <p class="filename-sm">
+                  {{
+                  item.name
+                  }}
+                </p>
+              </div>
+              <div style="margin-top: 1%" class="col-sm-3 col-3">
+                {{ item.type }}
+              </div>
+              <div class="col-sm-4 col-4">
+                <div class="row" style="float: right">
+                  <button type="button" class="btn btn-md btn-primary btn-icon" (click)="open2(dialog, item)">
+                    <i class="ion-information"></i>
+                  </button>
+                  <button type="button" class="btn btn-md btn-primary btn-icon" (click)="open(PreviewDialog, item)">
+                    <i class="ion-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-md btn-success btn-icon" (click)="open3(EditDialog, item)">
+                    <i class="ion-edit"></i>
+                  </button>
+                  <button type="button" class="btn btn-md btn-danger btn-icon" (click)="deleteMedia(DeleteDialog, item)">
+                    <i class="ion-trash-b"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="row row-sm" *ngIf="i % 2 != 0">
+              <div style="margin-top: 1%" class="col-sm-5 col-5">
+                <p class="filename-sm">
+                  {{
+                  item.name
+                  }}
+                </p>
+              </div>
+              <div style="margin-top: 1%" class="col-sm-3 col-3">
+                {{ item.type }}
+              </div>
+              <div class="col-sm-4 col-4">
+                <div class="row" style="float: right">
+                  <button type="button" class="btn btn-md btn-primary btn-icon" (click)="open2(dialog, item)">
+                    <i class="ion-information"></i>
+                  </button>
+                  <button type="button" class="btn btn-md btn-primary btn-icon" (click)="open(PreviewDialog, item)">
+                    <i class="ion-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-md btn-success btn-icon" (click)="open3(EditDialog, item)">
+                    <i class="ion-edit"></i>
+                  </button>
+                  <button type="button" class="btn btn-md btn-danger btn-icon" (click)="deleteMedia(DeleteDialog, item)">
+                    <i class="ion-trash-b"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="
+          margin-top: 20px;
+          width: 100%;
+          height: 30px;
+          justify-content: center;
+        ">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination" *ngIf="pagination.pages && pagination.pages.length">
+            <li class="page-item" (click)="setPage(pagination.currentPage - 1)" [class.disabled]="pagination.currentPage === 1">
+              <a class="page-link" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">{{ "Previous" | translate }}</span>
+              </a>
+            </li>
+            <li class="page-item" *ngFor="let page of pagination.pages">
+              <a class="page-link" [style.background-color]="
+                  pagination.currentPage == page ? '#dee2e6' : ''
+                " [class.is-current]="pagination.currentPage === page" aria-label="Goto page 1" (click)="setPage(page)">
+                {{ page }}
+              </a>
+            </li>
+            <li class="page-item" (click)="setPage(pagination.currentPage + 1)" [class.disabled]="
+                pagination.currentPage === pagination.totalPages
+              ">
+              <a class="page-link" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">{{ "Next" | translate }}</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <h3>Remaning Space {{getRemainingSpace()}}MB</h3>
+    </nb-card-body>
+  </nb-card>
+</div>
+
+<ng-template class="row col-lg-12" #dialog let-data let-ref="dialogRef">
+  <nb-card style="width: 410px; height: 530px" class="card-add-edit-Dialogue">
+    <nb-card-header>Information</nb-card-header>
+    <nb-card-body>
+      <div class="row">
+        <label class="col-sm-5"><strong>{{ "Name" | translate }}:</strong></label>
+        <div class="col-sm-7">
+          {{
+          data.name
+          }}
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <label class="col-sm-5"><strong>{{ "Type" | translate }}:</strong></label>
+        <div class="col-sm-7">
+          {{ data.type }}
+        </div>
+      </div>
+      <hr *ngIf="data.type != 'html'" />
+      <div class="row" *ngIf="data.type != 'html'">
+        <label class="col-sm-5"><strong>{{ "Size" | translate }}:</strong></label>
+        <div class="col-sm-7">
+          {{ (data.size / (1024 * 1024)).toFixed(2) }} MB
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <label class="col-sm-5"><strong>{{ "Length" | translate }}:</strong></label>
+        <div class="col-sm-7">{{ data.length }} Sec.</div>
+      </div>
+      <hr />
+      <div class="row">
+        <label class="col-sm-5"><strong>{{ "Resolution" | translate }}:</strong></label>
+        <div class="col-sm-7">{{ data.width }} * {{ data.height }}</div>
+      </div>
+      <hr />
+      <div class="row">
+        <label class="col-sm-5"><strong>{{ "Date Created" | translate }}:</strong></label>
+        <div class="col-sm-7">
+          {{ data.creationDate.seconds * 1000 | date : "medium" }}
+        </div>
+      </div>
+      <hr />
+
+      <div *ngIf="data?.isTemplate" class="form-group row">
+        <label class="col-sm-5 col-form-label"><strong>{{ "Edit Template" | translate }}:</strong></label>
+        <div style="margin-top: 2%" class="col-sm-7 input-group-sm">
+          <button nbButton (click)="editTemplate(data)">
+            {{ "Edit" | translate }}
+          </button>
+        </div>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <div class="btn-lg">
+        <button nbButton (click)="ref.close()">
+          {{ "Close" | translate }}
+        </button>
+      </div>
+      <div class="btn-sm">
+        <button nbButton (click)="ref.close()">
+          <i style="cursor: pointer" class="ion-close"></i>
+        </button>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<ng-template #EditDialog let-data let-ref="dialogRef">
+  <nb-card style="width: 410px; height: 530px" class="card-add-edit-Dialogue">
+    <nb-card-header>Edit</nb-card-header>
+    <nb-card-body>
+      <div class="form-group row">
+        <label for="mediaName" class="col-sm-5 col-form-label"><strong>{{ "Name" | translate }}:</strong></label>
+        <div class="col-sm-7 input-group-sm">
+          <input type="text" fieldSize="small" fullWidth class="form-control" id="mediaName" [(ngModel)]="data.name" [defaultValue]="data.name" minlength="8" maxlength="32" [value]="data.name" placeholder="Media Name" />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-5 col-form-label"><strong>{{ "Type" | translate }}:</strong></label>
+        <div style="margin-top: 2%" class="col-sm-7 input-group-sm">
+          {{ data.type }}
+        </div>
+      </div>
+
+      <div class="form-group row" *ngIf="data.type != 'html'">
+        <label class="col-sm-5 col-form-label"><strong>Size:</strong></label>
+        <div style="margin-top: 2%" class="col-sm-7 input-group-sm">
+          {{ (data.size / (1024 * 1024)).toFixed(2) }} MB
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="mediaLength" class="col-sm-5 col-form-label"><strong>{{ "Length (Sec)" | translate }}:</strong></label>
+        <div style="margin-top: 2%" class="col-sm-7 input-group-sm">
+          {{ data.length }}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-5 col-form-label"><strong>{{ "Resolution" | translate }}:</strong></label>
+        <div style="margin-top: 2%" class="col-sm-7 input-group-sm">
+          {{ data.width }}*{{ data.height }}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-5 col-form-label"><strong>{{ "Date Created" | translate }}:</strong></label>
+        <div style="margin-top: 2%" class="col-sm-7 input-group-sm">
+          {{ data.creationDate.seconds * 1000 | date : "medium" }}
+        </div>
+      </div>
+      <hr />
+
+      <div *ngIf="data?.isTemplate" class="form-group row">
+        <label class="col-sm-5 col-form-label"><strong>{{ "Edit Template" | translate }}:</strong></label>
+        <div style="margin-top: 2%" class="col-sm-7 input-group-sm">
+          <button nbButton (click)="editTemplate(data)">
+            {{ "Edit" | translate }}
+          </button>
+        </div>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <div class="btn-lg">
+        <button nbButton (click)="ref.close()">
+          {{ "Close" | translate }}
+        </button>
+        <button nbButton style="float: right" status="success" (click)="updateMediaItem(data); ref.close()">
+          {{ "Update" | translate }}
+        </button>
+      </div>
+      <div class="btn-sm">
+        <button nbButton (click)="ref.close()">
+          <i style="cursor: pointer" class="ion-close"></i>
+        </button>
+        <button nbButton style="float: right" status="success" (click)="updateMediaItem(data); ref.close()">
+          <i style="cursor: pointer" class="ion-checkmark"></i>
+        </button>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<ng-template #DeleteDialog let-data let-ref="dialogRef">
+  <nb-card class="card-delete-Dialogue">
+    <nb-card-header *ngIf="mediaUsedPlayList.length == 0">{{
+      "Delete Media" | translate
+      }}</nb-card-header>
+    <nb-card-header *ngIf="mediaUsedPlayList.length > 0">{{
+      "Permanent Delete Media" | translate
+      }}</nb-card-header>
+    <nb-card-body *ngIf="mediaUsedPlayList.length == 0">
+      {{ "Are you sure you want to delete this media?" | translate }}
+    </nb-card-body>
+    <nb-card-body *ngIf="mediaUsedPlayList.length > 0">
+      {{ "This media is associated with following PlayList" | translate }} ({{
+      mediaUsedPlayList.length
+      }}):
+      <br />
+      <nb-list style="max-height: 40vh; padding-top: 8%">
+        <nb-list-item *ngFor="let item of mediaUsedPlayList; let i = index">
+          <b>{{ i + 8 }}.</b>
+          {{
+          item.name
+          }}
+        </nb-list-item>
+      </nb-list>
+    </nb-card-body>
+
+    <nb-card-footer>
+      <div class="btn-lg">
+        <button nbButton (click)="ref.close()">
+          {{ "Close" | translate }}
+        </button>
+        <button nbButton style="float: right" status="danger" *ngIf="mediaUsedPlayList.length == 0" (click)="delete(data)">
+          {{ "Delete" | translate }}
+        </button>
+        <button nbButton style="float: right" status="danger" *ngIf="mediaUsedPlayList.length > 0" (click)="delete(data)">
+          {{ "Permanent Delete" | translate }}
+        </button>
+      </div>
+      <div class="btn-sm">
+        <button nbButton (click)="ref.close()">
+          <i style="cursor: pointer" class="ion-close"></i>
+        </button>
+        <button nbButton style="float: right" status="danger" *ngIf="mediaUsedPlayList.length == 0" (click)="delete(data)">
+          <i style="cursor: pointer" class="ion-trash-b"></i>
+        </button>
+        <button nbButton style="float: right" status="danger" *ngIf="mediaUsedPlayList.length > 0" (click)="delete(data)">
+          <i style="cursor: pointer" class="ion-trash-b"></i>
+        </button>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<ng-template #PreviewDialog let-data let-ref="dialogRef">
+  <div style="background: black">
+    <div *ngIf="data.type == 'image/jpeg' || data.type == 'image/png'">
+      <img style="max-width: 960px; max-height: 540px !important" class="preImage preview-card" src="{{ data?.url }}" />
+    </div>
+    <div *ngIf="data.type == 'video/mp4' || data.type == 'video/quicktime'">
+      <video class="preview-card" autoplay width="960" height="540" controls controlsList="nodownload">
+        <source src="{{ data?.url }}" type="video/mp4" />
+      </video>
+    </div>
+    <div *ngIf="data.type == 'html'">
+      <iframe style="width: 960px; height: 540px" class="preview-card" [src]="data?.url | ngxSafeHtml : 'resourceUrl'"></iframe>
+    </div>
+    <div *ngIf="data.type == 'weather'" style="background-color: white">
+      <iframe title="Weather" [src]="data?.url | ngxSafeHtml : 'resourceUrl'" style="max-width: 960px; max-height: 540px" class="preview-card"></iframe>
+    </div>
+  </div>
+</ng-template>
+
+
+
+<ng-template # let-data let-ref="dialogRef">
+  <div style="background: black">
+    <div *ngIf="data.type == 'image/jpeg' || data.type == 'image/png'">
+      <img style="max-width: 960px; max-height: 540px !important" class="preImage preview-card" src="{{ data?.url }}" />
+    </div>
+    <div *ngIf="data.type == 'video/mp4' || data.type == 'video/quicktime'">
+      <video class="preview-card" autoplay width="960" height="540" controls controlsList="nodownload">
+        <source src="{{ data?.url }}" type="video/mp4" />
+      </video>
+    </div>
+    <div *ngIf="data.type == 'html'">
+      <iframe style="width: 960px; height: 540px" class="preview-card" [src]="data?.url | ngxSafeHtml : 'resourceUrl'"></iframe>
+    </div>
+    <div *ngIf="data.type == 'weather'" style="background-color: white">
+      <iframe title="Weather" [src]="data?.url | ngxSafeHtml : 'resourceUrl'" style="max-width: 960px; max-height: 540px" class="preview-card"></iframe>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #UploadDialog let-data let-ref="dialogRef" data-toggle="modal" data-backdrop="static" data-keyboard="false">
+  <nb-card style="width: 560px; height: 540px" class="card-add-edit-Dialogue">
+    <nb-card-header>{{ "Upload Media" | translate }}</nb-card-header>
+    <nb-card-body>
+      <div class="container2">
+        <input type="file" #fileDropRef id="fileDropRef" (change)="onSelectFile($event)" accept=".jpg,.jpeg,.png,video/mp4,.mov,.gif" multiple />
+        <h4>{{ "Drag and drop file here" | translate }}</h4>
+        <h4>{{ "or" | translate }}</h4>
+        <label for="fileDropRef" class="btn btn-outline-primary btn-block btn-select">{{ "Select Files" | translate }}</label>
+      </div>
+      <form>
+        <label style="color: darkred"><b>{{ "Supported Files" | translate }}:</b>
+          {{ "( jpg, jpeg, png, mp4, mov )" | translate }}</label>
+        <div class="col-sm-12" style="margin-bottom: 10px">
+          <nb-select [(ngModel)]="SortBy" [ngModelOptions]="{ standalone: true }" style="background-color: white; border-radius: 10px" outline status="primary" size="xsmall" (selectedChange)="SortUploadFiles($event)" placeholder="Sort" outline>
+            <nb-option value="name">{{ "File Name" | translate }}</nb-option>
+            <nb-option value="type">{{ "File Type" | translate }}</nb-option>
+            <nb-option value="size">{{ "File Size" | translate }}</nb-option>
+          </nb-select>
+        </div>
+        <div class="btn-lg">
+          <div style="overflow: hidden">
+            <nb-list style="overflow: hidden">
+              <nb-list-item style="
+                  font-weight: bold;
+                  background-color: cornsilk;
+                  color: slategray;
+                  font-size: initial;
+                " class="row col-sm-12">
+                <div class="col-sm-6 col-4">{{ "Name" | translate }}</div>
+                <div class="col-sm-3 col-4">{{ "Type" | translate }}</div>
+                <div class="col-sm-3 col-4">{{ "Size" | translate }}</div>
+              </nb-list-item>
+              <nb-list-item style="
+                  background-color: cornsilk;
+                  color: slategray;
+                  font-size: initial;
+                  line-height: 1.2;
+                " class="row col-sm-12" *ngFor="let file of files; let ndx = index">
+                <div class="col-sm-6 col-4" style="word-break: break-all">
+                  <p class="filename-sm">{{ file.name }}</p>
+                </div>
+                <div class="col-sm-3 col-4">{{ file.type }}</div>
+                <div class="col-sm-3 col-4">
+                  {{ (file.size / (1024 * 1024)).toFixed(2) }}MB
+                </div>
+                <div *ngIf="value[ndx] == null || value[ndx] == undefined" class="col-sm-12" style="margin-top: 15px; margin-bottom: -20px">
+                  <nb-progress-bar [value]="0" [status]="status" [displayValue]="true" class="progressBar" [class.showBar]="true"></nb-progress-bar>
+                </div>
+                <div *ngIf="value[ndx] != null && value[ndx] != undefined" class="col-sm-12" style="margin-top: 15px; margin-bottom: -20px">
+                  <nb-progress-bar [value]="value[ndx]" [status]="status" [displayValue]="true" class="progressBar" [class.showBar]="true"></nb-progress-bar>
+                </div>
+              </nb-list-item>
+            </nb-list>
+          </div>
+        </div>
+        <div class="btn-sm">
+          <div style="overflow: hidden">
+            <nb-list style="overflow: hidden">
+              <nb-list-item style="background-color: cornsilk; color: slategray" class="row col-sm-12" *ngFor="let file of files; let ndx = index">
+                <div class="col-4">
+                  <div class="col-12">{{ "Name" | translate }}</div>
+                  <div class="col-12">{{ "Type" | translate }}</div>
+                  <div class="col-12">{{ "Size" | translate }}</div>
+                </div>
+                <div class="col-8">
+                  <div class="col-sm-6 col-12" style="word-break: break-all">
+                    <p class="filename-sm" style="margin-bottom: 0">
+                      {{ file.name }}
+                    </p>
+                  </div>
+                  <div class="col-sm-3 col-12">{{ file.type }}</div>
+                  <div class="col-sm-3 col-12">
+                    {{ (file.size / (1024 * 1024)).toFixed(2) }}MB
+                  </div>
+                  <div *ngIf="value[ndx] == null || value[ndx] == undefined" class="col-sm-12" style="margin-top: 15px; margin-bottom: -20px">
+                    <nb-progress-bar [value]="0" [status]="status" [displayValue]="true" class="progressBar" [class.showBar]="true"></nb-progress-bar>
+                  </div>
+                  <div *ngIf="value[ndx] != null && value[ndx] != undefined" class="col-sm-12" style="margin-top: 15px; margin-bottom: -20px">
+                    <nb-progress-bar [value]="value[ndx]" [status]="status" [displayValue]="true" class="progressBar" [class.showBar]="true"></nb-progress-bar>
+                  </div>
+                </div>
+              </nb-list-item>
+            </nb-list>
+          </div>
+        </div>
+      </form>
+    </nb-card-body>
+
+    <nb-card-footer>
+      <!-- // ref.close(); clearFilesList() -->
+      <button nbButton id="CloseUpload" *ngIf="!uploadFlag" (click)="ref.close(); clearFilesList()" class="modal-footer-custom">
+        {{ "Close" | translate }}
+      </button>
+      <button nbButton id="CloseUpload" *ngIf="uploadFlag" (click)="CancelUploadingCheck(cancelUploadingCheck)" class="modal-footer-custom">
+        {{ "Cancel" | translate }}
+      </button>
+      <button nbButton style="float: right" [disabled]="uploadFlag" status="success" (click)="UploadFirstCall()" class="modal-footer-custom">
+        {{ "Upload" | translate }}
+      </button>
+    </nb-card-footer>
+
+    <!-- <image-cropper
+    [imageChangedEvent]="imageChangedEvent"
+    [maintainAspectRatio]="true"
+    [aspectRatio]="4 / 3"
+    [resizeToWidth]="128"
+    format="png"
+    (imageCropped)="imageCropped($event)"
+></image-cropper> -->
+  </nb-card>
+</ng-template>
+
+<ng-template #wwwDialog let-data let-ref="dialogRef">
+  <nb-card style="width: 410px; height: 330px" class="card-www-Dialogue">
+    <nb-card-header>{{ "Website Media" | translate }}</nb-card-header>
+    <nb-card-body>
+      <div class="form-group row">
+        <label for="wwwMediaName" class="col-sm-5 col-form-label"><strong>{{ "Name" | translate }}:</strong></label>
+        <div class="col-sm-7 input-group-sm">
+          <input type="text" fieldSize="small" maxlength="32" fullWidth class="form-control" [(ngModel)]="webName" id="wwwMediaName" placeholder="Media Name" />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="wwwMediaURL" class="col-sm-5 col-form-label"><strong>{{ "URL" | translate }}:</strong></label>
+        <div class="col-sm-7 input-group-sm">
+          <input type="text" fieldSize="small" fullWidth class="form-control" id="wwwMediaURL" [(ngModel)]="webUrl" placeholder="Media URL" />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="wwwMediaLength" class="col-sm-5 col-form-label"><strong>{{ "Length (Sec)" | translate }}:</strong></label>
+        <div class="col-sm-7 input-group-sm">
+          <input type="number" fieldSize="small" oninput="this.value = this.value.replace(/[^\d-.]/g, '').replace(/(?!^)-/g, '').replace(/\.(?=.*\.)/g, '')" fullWidth class="form-control" min="0" id="wwwMediaLength" [(ngModel)]="webLength" placeholder="Media Length" />
+        </div>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <div class="btn-lg">
+        <button nbButton (click)="ref.close()">Close</button>
+        <button nbButton style="float: right" status="success" (click)="websiteToFirebase()">
+          {{ "Save" | translate }}
+        </button>
+      </div>
+      <div class="btn-sm">
+        <button nbButton (click)="ref.close()">
+          <i style="cursor: pointer" class="ion-close"></i>
+        </button>
+        <button nbButton style="float: right" status="success" (click)="websiteToFirebase()">
+          <i style="cursor: pointer" class="ion-checkmark"></i>
+        </button>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<ng-template #weatherDialog let-data let-ref="dialogRef">
+  <nb-card style="width: 800px; height: 570px" class="card-weather-Dialogue">
+    <nb-card-header>{{ "Add Widget Media" | translate }}</nb-card-header>
+    <nb-card-body>
+      <div class="row">
+        <div class="col-md-7" style="overflow-y: scroll">
+          <div class="row">
+            <div class="col-md-4 col-4 weather-container-sm">
+              <nb-card size="tiny" [ngStyle]="{
+                  border:
+                    selectedWeather == '3 Days Weather'
+                      ? '#000000 1px solid'
+                      : null
+                }" style="cursor: pointer" (click)="selectedWeather = '3 Days Weather'">
+                <nb-card-body class="weather-container-sm">
+                  <img src="../../../assets/images/Weather3day.png" style="width: 100%" />
+                </nb-card-body>
+              </nb-card>
+            </div>
+            <div class="col-md-4 col-4 weather-container-sm">
+              <nb-card size="tiny" [ngStyle]="{
+                  border:
+                    selectedWeather == '4 Days Weather'
+                      ? '#000000 1px solid'
+                      : null
+                }" style="cursor: pointer" (click)="selectedWeather = '4 Days Weather'">
+                <nb-card-body class="weather-container-sm">
+                  <img src="../../../assets/images/Weather4day.png" style="width: 100%" />
+                </nb-card-body>
+              </nb-card>
+            </div>
+            <div class="col-md-4 col-4 weather-container-sm">
+              <nb-card size="tiny" [ngStyle]="{
+                  border:
+                    selectedWeather == 'Current Weather'
+                      ? '#000000 1px solid'
+                      : null
+                }" (click)="selectedWeather = 'Current Weather'">
+                <nb-card-body class="weather-container-sm">
+                  <img src="../../../assets/images/currentweather.png" style="width: 100%" />
+                </nb-card-body>
+              </nb-card>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class=""></div>
+          <div>
+            <strong>{{ selectedWeather | translate }}</strong>
+          </div>
+          <br />
+          <div class="form-group row">
+            <label for="name" class="col-sm-5 col-form-label"><strong>{{ "Name" | translate }}:</strong></label>
+            <div class="col-sm-7 input-group-sm">
+              <input type="text" fieldSize="small" maxlength="32" fullWidth class="form-control" [(ngModel)]="getweather.name" id="name" placeholder="Name" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="Length" class="col-sm-5 col-form-label"><strong>{{ "Length (sec)" | translate }}:</strong></label>
+            <div class="col-sm-7 input-group-sm">
+              <input type="number" fieldSize="small" oninput="this.value = this.value.replace(/[^\d-.]/g, '').replace(/(?!^)-/g, '').replace(/\.(?=.*\.)/g, '')" fullWidth class="form-control" id="length" min="0" [(ngModel)]="getweather.length" placeholder="Length" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="Location" class="col-sm-5 col-form-label"><strong>{{ "Location" | translate }}:</strong></label>
+            <div class="col-sm-7 input-group-sm">
+              <input type="text" fieldSize="small" fullWidth class="form-control" id="locationinput" [(ngModel)]="getweather.location" (ngModelChange)="getLocation()" placeholder="Location" />
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="locationName.length > 0">
+            <label for="LocationName" class="col-sm-5 col-form-label"><strong> </strong></label>
+            <div class="col-sm-7 input-group-sm">
+              <select class="form-control select2" style="height: 100%" [(ngModel)]="location">
+                <option *ngFor="let item of locationName" [ngValue]="item">
+                  {{
+                  item.name
+                  }},{{ item.country }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="Scale" class="col-sm-5 col-form-label"><strong>{{ "Scale" | translate }}:</strong></label>
+            <div class="col-sm-7 input-group-sm">
+              <nb-radio-group [(ngModel)]="getweather.scale">
+                <nb-radio value="m">Celcius</nb-radio>
+                <nb-radio value="f">Farenheit</nb-radio>
+              </nb-radio-group>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="Background" class="col-sm-5 col-form-label"><strong>{{ "Background Color" | translate }}:</strong></label>
+            <div class="col-sm-7 input-group-sm">
+              <input type="color" [(ngModel)]="getweather.backgroundcolor" (ngModelChange)="setColor($event)" style="width: inherit" id="favcolor" name="favcolor" /><br /><br />
+            </div>
+          </div>
+        </div>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <div class="btn-lg">
+        <button nbButton (click)="ref.close()">Close</button>
+        <button nbButton style="float: right" status="success" (click)="saveWeather()">
+          {{ "Save" | translate }}
+        </button>
+      </div>
+      <div class="btn-sm">
+        <button nbButton (click)="ref.close()">
+          <i style="cursor: pointer" class="ion-close"></i>
+        </button>
+        <button nbButton style="float: right" status="success" (click)="saveWeather()">
+          <i style="cursor: pointer" class="ion-checkmark"></i>
+        </button>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<!--Widget Code-->
+<ng-template #widgetDialog let-data let-ref="dialogRef">
+  <nb-card style="width: 700px; height: 600px">
+    <nb-card-header style="display: flex">{{ "Add Media Widget" | translate }}
+      &nbsp;
+      <select class="form-control" style="
+          width: 120px;
+          height: 25px;
+          margin-left: 400px;
+          border-radius: 10px;
+          padding: 1px;
+        ">
+        <option value="-1">{{ "All" | translate }}</option>
+        <option value="4" selected>{{ "Weather" | translate }}</option>
+        <!--      <option value="6">Clocks</option>-->
+      </select>
+    </nb-card-header>
+    <nb-card-body>
+      <div style="width: 100%; height: 450px; display: flex">
+        <div class="row" style="
+            float: left;
+            clear: none;
+            width: 71%;
+            height: 100%;
+            overflow: hidden;
+            padding: 10px;
+          ">
+          <div class="widget_box" (click)="toggleDisplay()">
+            <div>
+              <img class="image" style="width: 120px; height: 110px" src="assets/images/Weather3day.png" />
+            </div>
+            <br />
+            <div style="
+                width: 125px;
+                margin-top: -6px;
+                font-weight: 500;
+                text-align: center;
+              " class="dots">
+              {{ "3 Day Weather" | translate }}
+            </div>
+          </div>
+          <!-- Next div -->
+          <div class="widget_box" (click)="toggleDisplay()">
+            <div>
+              <img class="image" style="width: 120px; height: 110px; z-index: 2" src="assets/images/Weather4day.png" />
+            </div>
+            <br />
+            <div style="
+                width: 125px;
+                margin-top: -6px;
+                font-weight: 500;
+                text-align: center;
+              " class="dots">
+              {{ "4 Day Weather" | translate }}
+            </div>
+          </div>
+          <!-- Next div -->
+          <div class="widget_box">
+            <div>
+              <img class="image" style="width: 120px; height: 110px" src="assets/images/currentweather.png" />
+            </div>
+            <br />
+            <div style="
+                width: 125px;
+                margin-top: -6px;
+                font-weight: 500;
+                text-align: center;
+              " class="dots">
+              {{ "Current Weather" | translate }}
+            </div>
+          </div>
+        </div>
+        <div style="width: 34%; height: 100%; padding: 5px; margin-left: 30px">
+          <form id="initial-form" [hidden]="isshow">
+            <div class="form-group">
+              <label>{{ "Name" | translate }}</label>
+              <input style="padding: 3px" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter Name" />
+            </div>
+            <div class="form-group">
+              <label>{{ "Lenght (sec)" | translate }}</label>
+              <input type="text" style="padding: 3px" class="form-control" placeholder="Enter Lenght(sec" />
+            </div>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+              <label class="form-check-label" for="exampleCheck1"><small>{{ "Report Playback" | translate }}</small></label>
+            </div>
+            <button style="padding: 5px" type="submit" class="btn btn-primary">
+              <small>{{ "Add" | translate }}</small>
+            </button>
+          </form>
+          <form id="first-widget-form" style="display: block" [hidden]="isnotshow">
+            <div class="form-group">
+              <label>{{ "Name" | translate }}</label>
+              <input style="padding: 3px" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter Name" />
+            </div>
+            <div class="form-group">
+              <label>{{ "Lenght (sec)" | translate }}</label>
+              <input type="text" style="padding: 3px" class="form-control" placeholder="Enter Lenght(sec" />
+            </div>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" />
+              <label class="form-check-label" for="exampleCheck1"><Label>{{ "Report Playback" | translate }}</Label></label>
+            </div>
+            <div class="form-group">
+              <label>{{ "Location" | translate }}</label>
+              <input type="text" style="padding: 3px" class="form-control" placeholder="Enter Location" />
+            </div>
+            <div class="form-group">
+              <div style="display: flex">
+                <label style="margin-right: 10px">{{
+                  "Scale" | translate
+                  }}</label>
+                &nbsp;
+                <input type="radio" name="gender" value="male" style="margin-right: 5px; margin-top: 3px" />
+                Male &nbsp;
+                <input type="radio" name="gender" value="female" style="margin-right: 5px; margin-top: 3px" />
+                Female
+              </div>
+            </div>
+            <div class="form-group">
+              <div display="flex">
+                <label>{{ "Font-color" | translate }} </label>
+                &nbsp;
+                <input type="color" value="#000" style="
+                    width: 32px;
+                    height: 22px;
+                    border: none !important;
+                    cursor: pointer;
+                  " />
+              </div>
+            </div>
+            <div class="form-group">
+              <div display="flex">
+                <label>{{ "Background" | translate }} </label>
+                &nbsp;
+                <input type="color" value="#000" style="
+                    width: 42px;
+                    height: 22px;
+                    border: none !important;
+                    cursor: pointer;
+                  " />
+              </div>
+            </div>
+            <div class="form-group">
+              <div display="flex">
+                <label>Transparent Background </label>
+                &nbsp;
+                <input type="checkbox" />
+              </div>
+            </div>
+            <div class="form-group">
+              <div display="flex">
+                <label>{{ "Background Image" | translate }}</label>
+                &nbsp;
+                <Button class="btn btn-primary" style="padding: 3px; font-size: 10px" (click)="AddImage(addImageDialog, item)">Add</Button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="ref.close(); onclose()">
+        {{ "Close" | translate }}
+      </button>
+      <button nbButton style="float: right" status="success">
+        {{ "Add" | translate }}
+      </button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+<!--Widget add Image-->
+<ng-template #addImageDialog let-data let-ref="dialogRef">
+  <nb-card style="width: 410px; height: 300px">
+    <nb-card-header>{{ "Upload Image" | translate }}</nb-card-header>
+    <nb-card-body>
+      <div class="widget_img">
+        <div>
+          <img class="image" style="width: 110px; height: 100px; border-radius: 10px" src="assets/images/d071cd.jpg" />
+        </div>
+        <br />
+        <div style="
+            width: 125px;
+            margin-top: -6px;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 5px;
+          " class="dots">
+          ESMflyer.jpg
+        </div>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="ref.close()">{{ "Close" | translate }}</button>
+      <button nbButton style="float: right" status="success" (click)="ref.close()">
+        {{ "Add" | translate }}
+      </button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<!--widget Preview Dialog-->
+<ng-template #widgetPreviewDialog let-data let-ref="dialogRef">
+  <div>
+    <div id="wrapper" class="wrapper" style="
+        z-index: 1;
+        background: transparent;
+        width: 848px;
+        height: 598px;
+        position: absolute;
+      ">
+      <img id="mainImage" src="https://s3.amazonaws.com/media.digitalsignage.net/themes/WeatherCore/weather/large/cloud.png" style="
+          float: left;
+          outline: none;
+          width: 424px;
+          height: 378.667px;
+          border: 0px;
+          padding: 0px;
+          margin: 1px 0px 0px 1px;
+          z-index: 2;
+          visibility: visible;
+        " class="image" alt="" />
+      <div id="description" style="
+          color: rgb(8, 0, 255);
+          top: 5px;
+          float: right;
+          right: 5px;
+          position: absolute;
+          z-index: 999;
+          height: 378.667px;
+        ">
+        <p id="degree" style="
+            text-align: right;
+            color: rgb(8, 0, 255);
+            height: 94.6667px;
+            font-size: 80px;
+            margin-top: 0px;
+          ">
+          13°C
+        </p>
+        <p id="date" style="
+            text-align: right;
+            color: rgb(8, 0, 255);
+            height: 63.1111px;
+            font-size: 53px;
+            margin-top: -5px;
+          ">
+          8/12
+        </p>
+        <p id="day" style="
+            text-align: right;
+            color: rgb(8, 0, 255);
+            font-weight: bold;
+            height: 37.8667px;
+            font-size: 31px;
+            margin-top: -5px;
+          ">
+          Sunday
+        </p>
+        <p id="weather" style="
+            text-align: right;
+            color: rgb(8, 0, 255);
+            height: 52.5926px;
+            font-size: 44px;
+            margin-top: 10px;
+          ">
+          Smoke
+        </p>
+        <div class="line2" id="line2" style="background: rgb(8, 0, 255)"></div>
+        <p id="location" style="
+            text-align: right;
+            color: rgb(8, 0, 255);
+            height: 49.8246px;
+            font-size: 41px;
+            margin-top: 10px;
+          ">
+          Lahore,Pakistan
+        </p>
+      </div>
+      <div class="NextDaysDiv" id="NextDaysDiv" style="
+          z-index: 9999;
+          background: transparent;
+          height: 199.333px;
+          width: 828px;
+          margin-left: 10px;
+        ">
+        <div style="margin-left: 10px">
+          <div style="
+              color: rgb(218, 180, 63);
+              width: 269.333px;
+              height: 199px;
+              top: 0px;
+              left: 0px;
+              float: left;
+              border-right: 2px solid rgb(8, 0, 255);
+              background-image: url('https://s3.amazonaws.com/media.digitalsignage.net/themes/WeatherCore/weather/large/partlyCloud.png');
+              background-size: 134.667px;
+              background-position: 134.667px 49.75px;
+              background-repeat: no-repeat;
+              text-align: left;
+            ">
+            <p style="
+                height: 66.3333px;
+                width: 269.333px;
+                font-size: 44px;
+                color: rgb(8, 0, 255);
+              ">
+              Monday
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 134.667px;
+                font-size: 55px;
+                margin-top: -5px;
+                color: rgb(8, 0, 255);
+              ">
+              26°
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 134.667px;
+                font-size: 47px;
+                margin-top: -10px;
+                color: rgb(8, 0, 255);
+              ">
+              15°
+            </p>
+          </div>
+          <div style="
+              color: rgb(235, 235, 235);
+              width: 269.333px;
+              height: 199px;
+              top: 0px;
+              left: 0px;
+              float: left;
+              border-right: 2px solid rgb(8, 0, 255);
+              border-left: 1px solid rgb(8, 0, 255);
+              background-image: url('https://s3.amazonaws.com/media.digitalsignage.net/themes/WeatherCore/weather/large/partlyCloud.png');
+              background-size: 134.667px;
+              background-position: 134.667px 49.75px;
+              background-repeat: no-repeat;
+              text-align: left;
+            ">
+            <p style="
+                height: 66.3333px;
+                width: 269.333px;
+                font-size: 44px;
+                color: rgb(8, 0, 255);
+              ">
+              Tuesday
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 134.667px;
+                font-size: 55px;
+                margin-top: -5px;
+                color: rgb(8, 0, 255);
+              ">
+              25°
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 134.667px;
+                font-size: 47px;
+                margin-top: -10px;
+                color: rgb(8, 0, 255);
+              ">
+              15°
+            </p>
+          </div>
+          <div style="
+              color: rgb(235, 235, 235);
+              width: 269.333px;
+              height: 199px;
+              top: 0px;
+              left: 0px;
+              float: left;
+              border-left: 1px solid rgb(8, 0, 255);
+              background-image: url('https://s3.amazonaws.com/media.digitalsignage.net/themes/WeatherCore/weather/large/partlyCloud.png');
+              background-size: 134.667px;
+              background-position: 134.667px 49.75px;
+              background-repeat: no-repeat;
+              text-align: left;
+            ">
+            <p style="
+                height: 66.3333px;
+                width: 269.333px;
+                font-size: 44px;
+                color: rgb(8, 0, 255);
+              ">
+              Wednesday
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 134.667px;
+                font-size: 55px;
+                margin-top: -5px;
+                color: rgb(8, 0, 255);
+              ">
+              24°
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 134.667px;
+                font-size: 47px;
+                margin-top: -10px;
+                color: rgb(8, 0, 255);
+              ">
+              14°
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="line" id="line" style="width: 100%; background: rgb(8, 0, 255)"></div>
+      <div id="footer" style="color: rgb(8, 0, 255)">
+        {{ "Data via weatherstack online" | translate }}
+      </div>
+      <div id="myText" style="font-size: 49px">14°</div>
+    </div>
+    <img style="width: 848px; height: 598px" class="preImage" src="assets/images/d071cd.jpg" />
+  </div>
+</ng-template>
+<!--widget Preview Dialog-->
+<ng-template #fourdayweatherwidgetPreviewDialog let-data let-ref="dialogRef">
+  <div>
+    <div id="wrapper" class="wrapper" style="
+        z-index: 1;
+        background: transparent;
+        width: 848px;
+        height: 598px;
+        position: absolute;
+      ">
+      <img id="mainImage" src="https://s3.amazonaws.com/media.digitalsignage.net/themes/WeatherCore/weather/large/cloud.png" style="
+          float: left;
+          width: 424px;
+          height: 378.667px;
+          border: 0px;
+          padding: 0px;
+          margin: 1px 0px 0px 1px;
+          z-index: 2;
+          visibility: visible;
+        " class="image" alt="" />
+      <div id="description" style="
+          top: 5px;
+          float: right;
+          right: 5px;
+          position: absolute;
+          z-index: 999;
+          color: rgb(61, 255, 22);
+          height: 378.667px;
+        ">
+        <p id="degree" style="
+            text-align: right;
+            color: rgb(61, 255, 22);
+            height: 94.6667px;
+            font-size: 80px;
+            margin-top: 0px;
+          ">
+          20°C
+        </p>
+        <p id="date" style="
+            text-align: right;
+            color: rgb(61, 255, 22);
+            height: 63.1111px;
+            font-size: 53px;
+            margin-top: -5px;
+          ">
+          12/9
+        </p>
+        <p id="day" style="
+            text-align: right;
+            color: rgb(61, 255, 22);
+            font-weight: bold;
+            height: 37.8667px;
+            font-size: 31px;
+            margin-top: -5px;
+          ">
+          Monday
+        </p>
+        <p id="weather" style="
+            text-align: right;
+            color: rgb(61, 255, 22);
+            height: 52.5926px;
+            font-size: 44px;
+            margin-top: 10px;
+          ">
+          Haze
+        </p>
+        <div class="line2" id="line2" style="background: rgb(61, 255, 22)"></div>
+        <p id="location" style="
+            text-align: right;
+            color: rgb(61, 255, 22);
+            height: 49.8246px;
+            font-size: 41px;
+            margin-top: 10px;
+          ">
+          Karachi,Pakistan
+        </p>
+      </div>
+      <div class="NextDaysDiv" id="NextDaysDiv" style="
+          z-index: 9999;
+          background: transparent;
+          height: 199.333px;
+          width: 828px;
+          margin-left: 10px;
+        ">
+        <div style="margin-left: 10px">
+          <div style="
+              color: rgb(218, 180, 63);
+              width: 197.073px;
+              height: 199px;
+              top: 0px;
+              left: 0px;
+              float: left;
+              border-right: 2px solid rgb(61, 255, 22);
+              background-image: url('https://s3.amazonaws.com/media.digitalsignage.net/themes/WeatherCore/weather/large/partlyCloud.png');
+              background-size: 98.5366px;
+              background-position: 98.5366px 49.75px;
+              background-repeat: no-repeat;
+              text-align: left;
+            ">
+            <p style="
+                height: 66.3333px;
+                width: 197.073px;
+                font-size: 32px;
+                color: rgb(61, 255, 22);
+              ">
+              Tuesday
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 98.5366px;
+                font-size: 55px;
+                margin-top: -5px;
+                color: rgb(61, 255, 22);
+              ">
+              29°
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 98.5366px;
+                font-size: 47px;
+                margin-top: -10px;
+                color: rgb(61, 255, 22);
+              ">
+              23°
+            </p>
+          </div>
+          <div style="
+              color: rgb(235, 235, 235);
+              width: 197.073px;
+              height: 199px;
+              top: 0px;
+              left: 0px;
+              float: left;
+              border-right: 2px solid rgb(61, 255, 22);
+              border-left: 1px solid rgb(61, 255, 22);
+              background-image: url('https://s3.amazonaws.com/media.digitalsignage.net/themes/WeatherCore/weather/large/partlyCloud.png');
+              background-size: 98.5366px;
+              background-position: 98.5366px 49.75px;
+              background-repeat: no-repeat;
+              text-align: left;
+            ">
+            <p style="
+                height: 66.3333px;
+                width: 197.073px;
+                font-size: 32px;
+                color: rgb(61, 255, 22);
+              ">
+              Wednesday
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 98.5366px;
+                font-size: 55px;
+                margin-top: -5px;
+                color: rgb(61, 255, 22);
+              ">
+              28°
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 98.5366px;
+                font-size: 47px;
+                margin-top: -10px;
+                color: rgb(61, 255, 22);
+              ">
+              23°
+            </p>
+          </div>
+          <div style="
+              color: rgb(235, 235, 235);
+              width: 197.073px;
+              height: 199px;
+              top: 0px;
+              left: 0px;
+              float: left;
+              border-right: 2px solid rgb(61, 255, 22);
+              border-left: 1px solid rgb(61, 255, 22);
+              background-image: url('https://s3.amazonaws.com/media.digitalsignage.net/themes/WeatherCore/weather/large/rain.png');
+              background-size: 98.5366px;
+              background-position: 98.5366px 49.75px;
+              background-repeat: no-repeat;
+              text-align: left;
+            ">
+            <p style="
+                height: 66.3333px;
+                width: 197.073px;
+                font-size: 32px;
+                color: rgb(61, 255, 22);
+              ">
+              Thursday
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 98.5366px;
+                font-size: 55px;
+                margin-top: -5px;
+                color: rgb(61, 255, 22);
+              ">
+              26°
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 98.5366px;
+                font-size: 47px;
+                margin-top: -10px;
+                color: rgb(61, 255, 22);
+              ">
+              23°
+            </p>
+          </div>
+          <div style="
+              color: rgb(235, 235, 235);
+              width: 197.073px;
+              height: 199px;
+              top: 0px;
+              left: 0px;
+              float: left;
+              border-left: 1px solid rgb(61, 255, 22);
+              background-image: url('https://s3.amazonaws.com/media.digitalsignage.net/themes/WeatherCore/weather/large/partlyCloud.png');
+              background-size: 98.5366px;
+              background-position: 98.5366px 49.75px;
+              background-repeat: no-repeat;
+              text-align: left;
+            ">
+            <p style="
+                height: 66.3333px;
+                width: 197.073px;
+                font-size: 32px;
+                color: rgb(61, 255, 22);
+              ">
+              Friday
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 98.5366px;
+                font-size: 55px;
+                margin-top: -5px;
+                color: rgb(61, 255, 22);
+              ">
+              31°
+            </p>
+            <p style="
+                height: 66.3333px;
+                width: 98.5366px;
+                font-size: 47px;
+                margin-top: -10px;
+                color: rgb(61, 255, 22);
+              ">
+              19°
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="line" id="line" style="width: 100%; background: rgb(61, 255, 22)"></div>
+      <div id="footer" style="color: rgb(61, 255, 22)">
+        {{ "Data via weatherstack online" | translate }}
+      </div>
+      <div id="myText" style="font-size: 49px">19°</div>
+    </div>
+    <img style="width: 848px; height: 598px" class="preImage" src="assets/images/d071cd.jpg" />
+  </div>
+</ng-template>
+<!--widget Preview Dialog-->
+<ng-template #currentweatherwidgetPreviewDialog let-data let-ref="dialogRef">
+  <div>
+    <div id="wrapper" class="wrapper" style="
+        background: transparent;
+        width: 848px;
+        height: 598px;
+        position: absolute;
+      ">
+      <img id="mainImage" src="https://s3.amazonaws.com/media.digitalsignage.net/themes/WeatherCore/weather/large/cloud.png" style="
+          visibility: visible;
+          float: left;
+          width: 282.667px;
+          height: 378.667px;
+          border: 0px;
+          padding: 0px;
+          margin: 12.6222px 0px 0px 359.2px;
+          z-index: 2;
+        " class="image" alt="" />
+      <div id="description" style="
+          float: left;
+          position: absolute;
+          z-index: 999;
+          color: red;
+          height: 378.667px;
+          left: 106px;
+          top: 14.1333px;
+        ">
+        <p id="degree" style="
+            float: left;
+            color: rgb(178, 129, 129);
+            height: 94.6667px;
+            font-size: 76px;
+            margin-top: 0px;
+          ">
+          22°C
+        </p>
+        <p id="weather" style="
+            text-align: left;
+            color: rgb(178, 129, 129);
+            height: 42.0741px;
+            font-size: 34px;
+          ">
+          Haze
+        </p>
+      </div>
+      <div class="NextDaysDiv" id="NextDaysDiv" style="
+          z-index: 9999;
+          background: transparent;
+          height: 199.333px;
+          width: 828px;
+          margin-left: 10px;
+        ">
+        <div style="
+            color: rgb(218, 180, 63);
+            width: 269.333px;
+            height: 199px;
+            top: 0px;
+            left: 0px;
+            float: left;
+            padding-top: 49.75px;
+            border-right: 2px solid rgb(178, 129, 129);
+            background-image: url('https://s3.amazonaws.com/media.digitalsignage.net/themes/WeatherCore/weather/large/cloud.png');
+            background-size: 134.667px;
+            background-position: 134.667px 49.75px;
+            background-repeat: no-repeat;
+            text-align: left;
+          ">
+          <p style="
+              height: 66.3333px;
+              width: 134.667px;
+              font-size: 53px;
+              margin-top: -5px;
+              color: rgb(178, 129, 129);
+            ">
+            29°
+          </p>
+          <p style="
+              height: 66.3333px;
+              width: 134.667px;
+              padding-top: 5px;
+              font-size: 45px;
+              margin-top: -10px;
+              color: rgb(178, 129, 129);
+            ">
+            21°
+          </p>
+        </div>
+        <div style="
+            color: rgb(235, 235, 235);
+            width: 269.333px;
+            height: 199px;
+            top: 0px;
+            left: 0px;
+            float: left;
+            padding-top: 49.75px;
+            border-right: 2px solid rgb(178, 129, 129);
+            border-left: 1px solid rgb(178, 129, 129);
+            background-image: url('wind.png');
+            background-size: 134.667px;
+            background-position: 134.667px 49.75px;
+            background-repeat: no-repeat;
+            text-align: left;
+          ">
+          <p style="
+              height: 66.3333px;
+              width: 134.667px;
+              font-size: 53px;
+              margin-top: -5px;
+              color: rgb(178, 129, 129);
+            ">
+            7
+          </p>
+          <p style="
+              height: 66.3333px;
+              width: 134.667px;
+              padding-top: 5px;
+              font-size: 45px;
+              margin-top: -10px;
+              color: rgb(178, 129, 129);
+            ">
+            Km/h
+          </p>
+        </div>
+        <div style="
+            color: rgb(235, 235, 235);
+            width: 269.333px;
+            height: 199px;
+            top: 0px;
+            left: 0px;
+            float: left;
+            padding-top: 49.75px;
+            border-left: 1px solid rgb(178, 129, 129);
+            background-image: url('humid.png');
+            background-size: 134.667px;
+            background-position: 134.667px 49.75px;
+            background-repeat: no-repeat;
+            text-align: left;
+          ">
+          <p style="
+              height: 66.3333px;
+              width: 134.667px;
+              font-size: 53px;
+              margin-top: -5px;
+              color: rgb(178, 129, 129);
+            ">
+            35%
+          </p>
+        </div>
+      </div>
+      <div class="line" id="line" style="width: 100%; background: rgb(178, 129, 129)"></div>
+      <div id="footer" style="color: rgb(178, 129, 129)">
+        {{ "Data via weatherstack online" | translate }}
+      </div>
+      <div id="myText" style="font-size: 37px">Humidity</div>
+    </div>
+    <img style="width: 848px; height: 598px" class="preImage" src="assets/images/d071cd.jpg" />
+  </div>
+</ng-template>
+<ng-template #popmenu>
+  <div class="p-3">
+    <button style="margin-bottom: 4px" nbButton status="primary" class="btn btn-xs col-sm-12" (click)="openUploadDialog(UploadDialog)">
+      {{ "Media" | translate }}
+    </button>
+    <br />
+    <button style="margin-bottom: 4px" nbButton status="primary" class="btn btn-xs col-sm-12" (click)="openWWWDialog(wwwDialog)">
+      {{ "WWW" | translate }}
+    </button>
+    <button style="margin-bottom: 4px" nbButton status="primary" class="btn btn-xs col-sm-12" (click)="openWeatherDialog(weatherDialog)">
+      {{ "Widget" | translate }}
+    </button>
+    <br />
+    <!--<button nbButton status="primary" class="btn btn-xs col-sm-12" (click)="openWidgetDialog(widgetDialog)">Widget
+    </button>-->
+  </div>
+</ng-template>
+<ng-template #widgetEditDialog let-data let-ref="dialogRef">
+  <nb-card style="width: 350px; height: 570px">
+    <nb-card-header>{{ "Edit Widget" | translate }}</nb-card-header>
+    <nb-card-body>
+      <div>
+        <form>
+          <div class="form-group">
+            <label>{{ "Name" | translate }}</label>
+            <input style="padding: 3px" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter Name" />
+          </div>
+          <div class="form-group">
+            <label>{{ "Lenght (sec)" | translate }}</label>
+            <input type="text" style="padding: 3px" class="form-control" placeholder="Enter Lenght(sec" />
+          </div>
+          <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" />
+            <label class="form-check-label" for="exampleCheck1"><Label>{{ "Report Playback" | translate }}</Label></label>
+          </div>
+          <div class="form-group">
+            <label>{{ "Location" | translate }}</label>
+            <input type="text" style="padding: 3px" class="form-control" placeholder="Enter Location" />
+          </div>
+          <div class="form-group">
+            <div style="display: flex">
+              <label style="margin-right: 10px">{{
+                "Scale" | translate
+                }}</label>
+              &nbsp;
+              <input type="radio" name="gender" value="male" style="margin-right: 5px; margin-top: 3px" />
+              Male &nbsp;
+              <input type="radio" name="gender" value="female" style="margin-right: 5px; margin-top: 3px" />
+              Female
+            </div>
+          </div>
+          <div class="form-group">
+            <div display="flex">
+              <label>{{ "Font-color" | translate }} </label>
+              &nbsp;
+              <input type="color" value="#000" style="
+                  width: 32px;
+                  height: 22px;
+                  border: none !important;
+                  cursor: pointer;
+                " />
+            </div>
+          </div>
+          <div class="form-group">
+            <div display="flex">
+              <label>{{ "Background" | translate }} </label>
+              &nbsp;
+              <input type="color" value="#000" style="
+                  width: 42px;
+                  height: 22px;
+                  border: none !important;
+                  cursor: pointer;
+                " />
+            </div>
+          </div>
+          <div class="form-group">
+            <div display="flex">
+              <label>{{ "Transparent Background" | translate }} </label>
+              &nbsp;
+              <input type="checkbox" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div display="flex">
+              <label>{{ "Background Image" | translate }}</label>
+              &nbsp;
+              <Button class="btn btn-primary" style="padding: 3px; font-size: 10px" (click)="AddImage(addImageDialog, item)">Add</Button>
+            </div>
+          </div>
+          <button nbButton status="primary" class="btn btn-xs col-sm-12">
+            {{ "Update" | translate }}
+          </button>
+        </form>
+      </div>
+    </nb-card-body>
+  </nb-card>
+</ng-template>
+<!--Profile popup-->
+<ng-template #userEditDialog let-data let-ref="dialogRef">
+  <nb-card style="width: 350px; height: 470px">
+    <nb-card-header>{{ "User Edit" | translate }}</nb-card-header>
+    <nb-card-body>
+      <div>
+        <form>
+          <div class="form-group">
+            <label>{{ "Name" | translate }}</label>
+            <input style="padding: 3px" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter Name" />
+          </div>
+          <div class="form-group">
+            <label>{{ "Email" | translate }}</label>
+            <input type="email" style="padding: 3px" class="form-control" placeholder="Enter Email" />
+          </div>
+          <div class="form-group">
+            <label>{{ "First Name" | translate }}</label>
+            <input style="padding: 3px" type="text" class="form-control" aria-describedby="emailHelp" placeholder="First Name" />
+          </div>
+          <div class="form-group">
+            <label>{{ "Last Name" | translate }}</label>
+            <input style="padding: 3px" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Last Name" />
+          </div>
+          <div class="form-group">
+            <label>{{ "PhoneNumber" | translate }}</label>
+            <input style="padding: 3px" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Email" />
+          </div>
+          <button nbButton status="primary" class="btn btn-xs col-sm-12">
+            {{ "Update" | translate }}
+          </button>
+        </form>
+      </div>
+    </nb-card-body>
+  </nb-card>
+</ng-template>
+
+<ng-template #cancelUploadingCheck let-data let-ref="dialogRef">
+  <nb-card class="card-sm-2">
+    <nb-card-header>{{ "Media" | translate }}</nb-card-header>
+    <nb-card-body>{{
+      "Please confirm to cancel uploading?" | translate
+      }}</nb-card-body>
+    <nb-card-footer>
+      <div class="btn-lg-2">
+        <button nbButton (click)="ref.close('No')">
+          {{ "No" | translate }}
+        </button>
+        <button nbButton style="float: right" status="danger" (click)="ref.close('Yes')">
+          {{ "Yes" | translate }}
+        </button>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+
+<ng-template #AddFolderDialog let-data let-ref="dialogRef">
+  <nb-card style="width: 410px; height: 200px;" class="card-add-edit-Dialogue">
+    <nb-card-header>{{'Add Folder' | translate}}</nb-card-header>
+    <nb-card-body>
+      <div class="form-group row">
+        <label class="col-sm-5 col-form-label"><strong>{{'Folder name' | translate}}:</strong></label>
+        <div class="col-sm-7 input-group-sm">
+          <input type="text" fieldSize="small" fullWidth class="form-control" [(ngModel)]="newFolderName" id="dirName" placeholder="Enter Folder Name...">
+        </div>
+      </div>
+
+
+    </nb-card-body>
+    <nb-card-footer>
+      <div class="btn-lg">
+        <button nbButton (click)="ref.close()">{{'Close' | translate}}</button>
+        <button nbButton style="float: right;" status="primary" (click)="createFolder()">{{'Save' | translate}}</button>
+      </div>
+      <div class="btn-sm">
+        <button nbButton (click)="ref.close()">
+          <i style="cursor: pointer;" class="ion-close"></i>
+        </button>
+        <button nbButton style="float: right;" status="primary" (click)="createFolder()">
+          <i style="cursor: pointer;" class="ion-checkmark"></i>
+        </button>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+
+</ng-template>
+
+<ng-template #DeleteFolder let-data let-ref="dialogRef">
+  <nb-card style="width: 410px; height: 300px;" class="card-add-edit-Dialogue">
+    <nb-card-header>{{'Delete Folder' | translate}}</nb-card-header>
+    <nb-card-body>
+      <div class="form-group row">
+        <h6 class="">
+          Are You sure you want to delete this folder, it will also delete all the items in the folder too and from the playlist
+        </h6>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <div class="btn-lg">
+        <button nbButton (click)="ref.close()">{{'Close' | translate}}</button>
+        <button nbButton style="float: right;" status="primary" (click)="deleteFolder(data)">{{'Delete' | translate}}</button>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>

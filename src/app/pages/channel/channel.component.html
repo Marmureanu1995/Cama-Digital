@@ -1,0 +1,644 @@
+<div class="row">
+  <div id="mySidenav" class="sidenav">
+    <div class="playlist-color">
+      <div class="align_playlist_btn">
+        <div class="row" style="width: 100%; margin-left: 0">
+          <div class="col-md-6 col-6" style="padding-right: 0">
+            <div class="align_a text-center" (click)="refreshChannel()">
+              <i class="align_btn ion-android-sync" style="margin: 0 auto"></i>
+              {{ "Refresh" | translate }}
+            </div>
+          </div>
+          <div class="col-md-6 col-6">
+            <div class="align_a text-center" (click)="addChannel(AddChannelDialog)">
+              <i class="align_btn ion-android-add"></i>
+              {{ "Add" | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12" style="margin-top: 10px">
+        <nb-select [(selected)]="selectedValue" style="background-color: white; border-radius: 10px" outline status="primary" size="xsmall" (selectedChange)="onSelection($event)" placeholder="Sort" outline>
+          <nb-option value="1">Channel Name</nb-option>
+          <nb-option value="2">Creation Date</nb-option>
+        </nb-select>
+      </div>
+    </div>
+    <div class="col-12 playlist">
+      <div *ngFor="let channel of channelsList; let i = index">
+        <div class="playlist_items row" *ngIf="selectedChannel.id == channel.id" style="background-color: #262626">
+          <div class="col-sm-8 col-7" (click)="ChannelSelected(channel)" style="white-space: unset">
+            <label class="playlist_name truncate-text" [attr.title]="channel.name.length > 15 ? channel.name : ''">{{ channel.name }}</label>
+          </div>
+          <div class="col-sm-4 col-5">
+            <i *ngIf="user.role != 'user'" class="icons-playlist ion-trash-b" (click)="deleteChannel(DeleteChannelDialog, channel)"></i>
+            <i class="icons-playlist ion-edit" (click)="editChannel(EditChannelDialog, channel)" style="margin-right: 20%"></i>
+          </div>
+        </div>
+        <div class="playlist_items row" *ngIf="selectedChannel.id != channel.id">
+          <div class="col-sm-8 col-7" (click)="ChannelSelected(channel)" style="white-space: unset">
+            <label class="playlist_name truncate-text" [attr.title]="channel.name.length > 15 ? channel.name : ''">{{ channel.name }}</label>
+          </div>
+          <div class="col-sm-4 col-5">
+            <i *ngIf="user.role != 'user'" class="icons-playlist ion-trash-b" (click)="deleteChannel(DeleteChannelDialog, channel)"></i>
+            <i class="icons-playlist ion-edit" (click)="editChannel(EditChannelDialog, channel)" style="margin-right: 20%"></i>
+          </div>
+        </div>
+      </div>
+      <div class="emptyspaceadd">
+        <label class="playlist_name"></label>
+      </div>
+    </div>
+  </div>
+  <div id="check" class="cards">
+    <ngx-topBar></ngx-topBar>
+    <div class="row card1" style="margin-bottom: -17px">
+      <div #rowLayout cdkDropListGroup style="width: 99%">
+        <nb-card size="tiny" class="" [nbSpinner]="ChannelPlayListloading" nbSpinnerStatus="danger" nbSpinnerSize="large" [ngClass]="
+            dragStarted == true ? 'card_dropZone showBorder' : 'card_dropZone'
+          ">
+          <div class="DragDrop_Container">
+            <div class="row row-sm">
+              <div class="col col-left">
+                <div class="row items_align" style="margin-top: 0; margin-right: 10px; float: unset" id="align_menu">
+                  <div style="display: inline-flex; width: 25%; min-width: 25%" class="name-time-sm">
+                    <span class="ion-android-menu toggle-icon menu_padding" id="open_btn" (click)="openNav()">
+                    </span>
+                    <span class="ion-android-menu toggle-icon menu_padding" id="close_btn" style="font-size: 30px; cursor: pointer" (click)="closeNav()">
+                    </span>
+                    <h5 class="playlist_heading" *ngIf="
+                        channelsList.length != 0 &&
+                        selectedChannel?.name &&
+                        selectedChannel?.name.length
+                      " [attr.title]="
+                        selectedChannel?.name.length > 20
+                          ? selectedChannel?.name
+                          : ''
+                      ">
+                      {{ selectedChannel?.name | truncate : [20, "..."] }}
+                    </h5>
+                    <p class="preview_time menu_padding sm-time">
+                      {{ TotalTimeString }}
+                    </p>
+                  </div>
+                  <div style="
+                      display: inline-flex;
+                      width: 75%;
+                      justify-content: flex-end;
+                    " class="btn-preview-sm">
+                    <p class="preview_time menu_padding lg-time">
+                      {{ TotalTimeString }}
+                    </p>
+                    <div class="lg">
+                      <button nbButton size="xsmall" class="preview_btn menu_padding" (click)="eyeAll(PreviewDialog)" status="info">
+                        <small>{{ "Preview" | translate }}</small>
+                      </button>
+                      <button nbButton size="xsmall" class="publish_btn menu_padding" [class.new-changes]="this.change" status="info" (click)="updateChannel()">
+                        <small>{{ "Publish Changes" | translate }}</small>
+                      </button>
+                      <div style="float: right" class="col-xs-3 col-sm-4 input-group-sm">
+                        <input type="text" style="border-color: #262626" fieldSize="xsmall" [(ngModel)]="searchValue" (ngModelChange)="searchAllList()" class="form-control" id="searchBar" placeholder="Search" />
+                      </div>
+                    </div>
+                    <div class="sm">
+                      <div class="col-xs-3 col-sm-4 input-group-sm inner-addon left-addon sm-top-searchbar">
+                        <i style="cursor: pointer; font-size: 25px" class="ion-android-search searchIcon"></i>
+                        <input type="text" fieldSize="xsmall" [(ngModel)]="searchValue" [ngClass]="{
+                            'active-searchBar': searchValue !== '',
+                            'search-Bar': searchValue === ''
+                          }" (ngModelChange)="searchAllList()" class="form-control" />
+                      </div>
+                      <div class="sm-top-btnContainer">
+                        <button nbButton size="xsmall" class="preview_btn menu_padding" (click)="eyeAll(PreviewDialog)" status="info">
+                          <i class="ion-eye"></i>
+                        </button>
+                        <button nbButton size="xsmall" class="publish_btn menu_padding" [class.new-changes]="this.change" status="info" (click)="updateChannel()">
+                          <i class="ion-checkmark"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-box" *ngIf="channelPlaylists.length > 0" style="height: 340px; overflow: scroll; width: 100%">
+              <div fxLayout="row" class="dropZone_Reorder" *ngFor="
+                  let itemsRow of getItemsTable(rowLayout);
+                  let j = index;
+                  trackBy: trackByEmpCode
+                " cdkDropList cdkDropListOrientation="horizontal" [id]="'DropZone' + j" [cdkDropListData]="itemsRow" (cdkDropListDropped)="reorderDroppedItem($event, j)">
+                <div *ngFor="
+                    let item of itemsRow;
+                    let i = index;
+                    trackBy: trackByEmpCode
+                  " cdkDrag (cdkDragStarted)="onDragStartedDropZone(j)" [ngClass]="
+                    columnSize - 1 == i
+                      ? 'container_div lastindex'
+                      : 'container_div'
+                  ">
+                  <div class="drag-placeholder" *cdkDragPlaceholder></div>
+                  <div *ngIf="
+                      item.media[0]?.type == 'image/jpeg' ||
+                      item.media[0]?.type == 'image/png'
+                    " fxLayoutAlign="center center" class="item-box">
+                    <img class="image" src="{{ item.media[0]?.url }}" />
+                  </div>
+
+                  <div *ngIf="
+                      item.media[0]?.type == 'video/mp4' ||
+                      item.media[0]?.type == 'video/quicktime'
+                    " fxLayoutAlign="center center" class="item-box">
+                    <img *ngIf="item.media[0]?.thumbnailURL" class="image" [src]="item.media[0]?.thumbnailURL" />
+                    <img *ngIf="!item.media[0]?.thumbnailURL" class="image" [src]="alternateImg" />
+                    <!-- <img class="image" [src]="item.media[0]?.thumbnailURL" /> -->
+                  </div>
+                  <div *ngIf="item.media[0].type == 'html'" draggable="true" fxLayoutAlign="center center" class="item-box">
+                    <div *ngIf="item.media[0]?.url.includes('allurerealestate')">
+                      <img *ngIf="item.media[0].pictures[0]" class="image" [src]="item.media[0]?.pictures[0]" />
+                      <img *ngIf="!item.media[0]?.pictures[0]" class="image" [src]="alternateImg" />
+                    </div>
+                    <img class="image" *ngIf="
+                        item.media[0]?.forecastdays != 4 &&
+                        item.media[0]?.forecastdays != 5 &&
+                        item.media[0]?.forecastdays != 1 &&
+                        !item.media[0]?.url.includes('allurerealestate')
+                      " [src]="alternateHtml" />
+                    <img class="image" *ngIf="item.media[0]?.forecastdays == 4" src="../../../assets/images/Weather3day.png" />
+                    <img class="image" *ngIf="item.media[0]?.forecastdays == 5" src="../../../assets/images/Weather4day.png" style="width: 100%" />
+                    <img class="image" *ngIf="item.media[0]?.forecastdays == 1" src="../../../assets/images/currentweather.png" />
+                  </div>
+                  <div class="scheduleIcon" *ngIf="item.isScheduled">
+                    <button type="button" class="btn btn-md btn-success btn-icon scheduleBtn">
+                      <i class="ion-android-calendar"></i>
+                    </button>
+                  </div>
+
+                  <div class="maxMediaIcon" *ngIf="getMaxMediaIcon(item) != undefined">
+                    <button type="button" class="btn btn-md btn-success btn-icon scheduleBtn">
+                      <i class="number-icon">{{ getMaxMediaIcon(item) }}</i>
+                    </button>
+                  </div>
+                  <div class="middle_media">
+                    <div class="row">
+                      <button type="button" class="btn btn-md btn-primary btn-icon" (click)="eye(PreviewDialog, item)">
+                        <i class="ion-eye"></i>
+                      </button>
+                      <button type="button" class="btn btn-md btn-warning btn-icon" (click)="schedule(ScheduleDialog, item, i, j)">
+                        <i class="ion-android-calendar"></i>
+                      </button>
+                    </div>
+                    <div class="row">
+                      <button type="button" class="btn btn-md btn-success btn-icon" (click)="setting(SettingDialog, item, i, j)">
+                        <i class="ion-android-settings"></i>
+                      </button>
+                      <button *ngIf="user.role != 'user'" type="button" class="btn btn-md btn-danger btn-icon" (click)="
+                          deleteChannelPlaylist(
+                            DeleteChannelPlaylistDialog,
+                            item,
+                            i,
+                            j
+                          )
+                        ">
+                        <i class="ion-trash-b"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <br />
+                  <p class="DragDropContent dots" [class.dot-CardTitle]="item.name.length > 11">
+                    {{ item.name }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="container-box" *ngIf="channelPlaylists.length == 0">
+              <div fxLayout="row" cdkDropList id="DropZone" cdkDropListOrientation="horizontal" [cdkDropListData]="itemsRow" (cdkDropListDropped)="reorderDroppedItem($event, i)" style="height: 350px">
+                <div class="no-itemsContainer">
+                  <h2 class="no-itemsMsg">
+                    {{ "No playlist record found" | translate }}
+                  </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nb-card>
+        <nb-card class="dragDrop_cards">
+          <div class="DragDrop_Container">
+            <h5 style="
+                padding: 5px;
+                margin-left: 1%;
+                margin-bottom: 2%;
+                margin-top: 1%;
+              ">
+              {{ "Playlist" | translate }} &nbsp;
+              <label style="padding-left: 10%; padding-right: 5%"><input type="checkbox" [(ngModel)]="selectAll" (click)="checkAlldata($event)" />
+                {{ "Select All" | translate }}</label>
+            </h5>
+            <div cdkDropList #doneList="cdkDropList" cdkDropListConnectedTo="DropZone" id="dragZone" (cdkDropListDropped)="drop()" class="dragZoneClass">
+              <div *ngFor="let item of playLists; let i = index" cdkDrag (cdkDragStarted)="onDragStarted(i)" (click)="onTouch(item, i)" [cdkDragDisabled]="item.media.length == 0">
+                <div class="playlistItem-container">
+                  <div class="drag-placeholder" *cdkDragPlaceholder></div>
+                  <div *ngIf="item.media?.length > 0; else emptyPlaylist" fxLayoutAlign="center center" [ngClass]="item.checked ? 'item-box' : 'item-box'">
+                    <div *ngIf="
+                        item.media[0]?.type == 'image/jpeg' ||
+                        item.media[0]?.type == 'image/png'
+                      ">
+                      <img class="image_playlist" src="{{ item.media[0]?.url }}" />
+                    </div>
+                    <div *ngIf="
+                      item.media[0]?.type == 'video/mp4' ||
+                      item.media[0]?.type == 'video/quicktime' ||
+                      item.media[0]?.type == 'RANKING' ||
+                      item.media[0]?.type == 'AGENDA'
+                    ">
+                      <img *ngIf="item.media[0]?.thumbnailURL" class="image" [src]="item.media[0]?.thumbnailURL" />
+                      <img *ngIf="!item.media[0]?.thumbnailURL" class="image" [src]="alternateImg" alt="" />
+                    </div>
+
+                    <div *ngIf="item.media[0]?.type == 'html'" draggable="true">
+                      <img class="image" *ngIf="item.media[0]?.forecastdays == 4" src="../../../assets/images/Weather3day.png" />
+                      <img class="image" *ngIf="item.media[0]?.forecastdays == 5" src="../../../assets/images/Weather4day.png" style="width: 100%" />
+                      <img class="image" *ngIf="item.media[0]?.forecastdays == 1" src="../../../assets/images/currentweather.png" />
+                      <img class="image" *ngIf="
+                          item.media[0]?.forecastdays != 4 &&
+                          item.media[0]?.forecastdays != 5 &&
+                          item.media[0]?.forecastdays != 1 &&
+                          !item.media[0]?.url.includes('allurerealestate')
+                        " [src]="alternateHtml" />
+                    </div>
+                    <p class="DragDropContent dots">
+                      <input class="chdata" type="checkbox" [(ngModel)]="item.state" value="{{ item.name }}" id="{{ item.id }}" />
+                      &nbsp;{{ item.name | truncate : [8, "..."] }} &nbsp;
+                    </p>
+                  </div>
+                  <ng-template #emptyPlaylist>
+                    <div fxLayoutAlign="center center" [ngClass]="item.state ? 'item-box' : 'item-box'">
+                      <img class="image_playlist" src="/assets/images/no_playlist.png" />
+                      <p class="DragDropContent dots">
+                        <input *ngIf="item.media.length > 0" class="chdata" type="checkbox" [(ngModel)]="item.state" value="{{ item.name }}" id="{{ item.id }}" />
+                        &nbsp;{{ item.name | truncate : [8, "..."] }} &nbsp;
+                      </p>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nb-card>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #AddChannelDialog let-data let-ref="dialogRef">
+    <nb-card style="width: 410px; height: 270px" class="card-sm-2">
+      <nb-card-header>{{ "Add Channel" | translate }}</nb-card-header>
+      <nb-card-body>
+        <div class="form-group row">
+          <label for="playlistName" class="col-sm-4 col-form-label"><strong>{{ "Channel Name" | translate }}:</strong></label>
+          <div class="col-sm-8 input-group-sm">
+            <input type="text" fieldSize="small" fullWidth class="form-control" [(ngModel)]="newChannelName" id="playlistName" maxlength="32" (keyup)="validationchannelNameChaeck()" placeholder="Enter Channel Name..." />
+          </div>
+        </div>
+        <div *ngIf="wrongChannelNamePattern" style="color: red; font-weight: bold; text-align: center">
+          {{ channelPatternMessage }}
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <div class="btn-lg-2">
+          <button nbButton (click)="closeDialog()">
+            {{ "Close" | translate }}
+          </button>
+          <button nbButton style="float: right" (click)="createChannel()" status="success">
+            {{ "Add" | translate }}
+          </button>
+        </div>
+        <div class="btn-sm-2">
+          <button nbButton (click)="ref.close()">
+            <i style="cursor: pointer" class="ion-close"></i>
+          </button>
+          <button nbButton style="float: right" (click)="createChannel()" status="success">
+            <i style="cursor: pointer" class="ion-checkmark"></i>
+          </button>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template #DeleteChannelDialog let-data let-ref="dialogRef">
+    <nb-card class="card-sm-2">
+      <nb-card-header>{{ "Delete Channel" | translate }}</nb-card-header>
+      <nb-card-body>{{
+        "Are you sure you want to delete this channel?" | translate
+        }}</nb-card-body>
+      <nb-card-footer>
+        <div class="btn-lg-2">
+          <button nbButton (click)="ref.close()">
+            {{ "Close" | translate }}
+          </button>
+          <button nbButton style="float: right" status="danger" (click)="deleteChannelConfirm(data)">
+            {{ "Delete" | translate }}
+          </button>
+        </div>
+        <div class="btn-sm-2">
+          <button nbButton (click)="ref.close()">
+            <i style="cursor: pointer" class="ion-close"></i>
+          </button>
+          <button nbButton style="float: right" status="danger" (click)="deleteChannelConfirm(data)">
+            <i style="cursor: pointer" class="ion-trash-b"></i>
+          </button>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template #EditChannelDialog let-data let-ref="dialogRef">
+    <nb-card style="width: 410px; height: 290px" class="card-sm-2">
+      <nb-card-header>{{ "Edit Channel" | translate }}</nb-card-header>
+      <nb-card-body>
+        <div class="form-group row">
+          <label for="editChannelName" class="col-sm-4 col-form-label"><strong>{{ "Channel Name" | translate }}:</strong></label>
+          <div class="col-sm-8 input-group-sm">
+            <input type="text" fieldSize="small" fullWidth class="form-control" id="editChannelName" [(ngModel)]="data.name" [defaultValue]="data.name" (keyup)="validationChannelNameEdit(data)" maxlength="32" [value]="data.name" placeholder="Channel Name" />
+          </div>
+        </div>
+        <div *ngIf="wrongChannelNamePattern" style="color: red; font-weight: bold; text-align: center">
+          {{ channelPatternMessage }}
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <div class="btn-lg-2">
+          <button nbButton (click)="ref.close(); wrongChannelNamePattern = false">
+            {{ "Close" | translate }}
+          </button>
+          <button nbButton style="float: right" status="success" (click)="updateChannelName(data)">
+            {{ "Update" | translate }}
+          </button>
+        </div>
+        <div class="btn-sm-2">
+          <button nbButton (click)="ref.close()">
+            <i style="cursor: pointer" class="ion-close"></i>
+          </button>
+          <button nbButton style="float: right" status="success" (click)="updateChannelName(data)">
+            <i style="cursor: pointer" class="ion-checkmark"></i>
+          </button>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template #PreviewDialog let-data let-ref="dialogRef">
+    <div style="background: black" *ngIf="previewMedia">
+      <div *ngIf="
+          previewMedia.type == 'image/jpeg' || previewMedia.type == 'image/png'
+        ">
+        <img style="max-width: 960px; max-height: 540px" class="preview-card" src="{{ previewMedia?.url }}" />
+      </div>
+      <div *ngIf="
+          previewMedia.type == 'video/mp4' ||
+          previewMedia.type == 'video/quicktime'
+        ">
+        <video class="preview-card" *ngIf="vidCheck" width="960" height="540" controls autoplay preload="auto" (ended)="changeMedia($event)">
+          <source src="{{ previewMedia?.url }}" type="video/mp4" />
+        </video>
+      </div>
+      <div *ngIf="previewMedia.type == 'html'" draggable="true">
+        <iframe class="preview-card" style="width: 960px; height: 540px" [src]="previewMedia?.url | ngxSafeHtml : 'resourceUrl'"></iframe>
+      </div>
+      <div *ngIf="previewMedia.type == 'weather'" style="background-color: white">
+        <iframe class="preview-card" title="Weather" [src]="previewMedia?.url | ngxSafeHtml : 'resourceUrl'" style="max-width: 960px; max-height: 540px"></iframe>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #ScheduleDialog let-data let-ref="dialogRef">
+    <nb-card style="width: 410px; height: 440px" class="scheduleContainer">
+      <nb-card-header>{{ "Content Schedule" | translate }}</nb-card-header>
+      <nb-card-body>
+        <div class="form-group row">
+          <div class="col-sm-12 input-group-sm">
+            <nb-checkbox [(ngModel)]="sch.dateCheck">{{
+              "Date" | translate
+              }}</nb-checkbox>
+            <nb-checkbox *ngIf="false" [(ngModel)]="sch.removeMediaAfterExpiry">{{ "Remove Media After Expiry" | translate }}</nb-checkbox>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-3">
+            <div class="form-group row">
+              <div class="col-sm-6 input-group-sm from-to">
+                {{ "From" | translate }}:
+              </div>
+              <div class="col-sm-6 input-group-sm from-to">
+                {{ "To" | translate }}:
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-9">
+            <div class="form-group row">
+              <div class="col-sm-6 input-group-sm date-time-sm">
+                <input [disabled]="!sch.dateCheck" [(ngModel)]="sch.dateFrom" type="date" fieldSize="small" fullWidth class="form-control" (change)="onDateChangeValidation()" />
+              </div>
+
+              <div class="col-sm-6 input-group-sm">
+                <input [disabled]="!sch.dateCheck" [(ngModel)]="sch.dateTo" type="date" fieldSize="small" fullWidth class="form-control" (change)="onDateChangeValidation()" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-sm-12 input-group-sm">
+            <nb-checkbox [(ngModel)]="sch.timeCheck" (change)="onSelectTimeCheck($event)">{{ "Time" | translate }}
+            </nb-checkbox>
+            <nb-checkbox [(ngModel)]="sch.allDay" (change)="onSelectDaysCheck($event)">{{ "All Day" | translate }}
+            </nb-checkbox>
+            <nb-checkbox *ngIf="false" [(ngModel)]="sch.repeatEveryYear">{{ "Repeat Every Year" | translate }}
+            </nb-checkbox>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-3">
+            <div class="form-group row">
+              <div class="col-sm-6 input-group-sm from-to">
+                {{ "From" | translate }}:
+              </div>
+              <div class="col-sm-6 input-group-sm from-to">
+                {{ "To" | translate }}:
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12 col-9">
+            <div class="form-group row">
+              <div class="col-sm-6 input-group-sm date-time-sm">
+                <input [disabled]="!sch.timeCheck" type="time" [(ngModel)]="sch.timeFrom" (change)="onTimeChangeValidation()" fieldSize="small" fullWidth class="form-control" />
+              </div>
+
+              <div class="col-sm-6 input-group-sm">
+                <input [disabled]="!sch.timeCheck" type="time" [(ngModel)]="sch.timeTo" (change)="onTimeChangeValidation()" fieldSize="small" fullWidth class="form-control" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-sm-4 input-group-sm col-6">
+            <nb-checkbox [(ngModel)]="sch.days[0]">{{
+              "Monday" | translate
+              }}</nb-checkbox>
+          </div>
+          <div class="col-sm-4 input-group-sm col-6">
+            <nb-checkbox [(ngModel)]="sch.days[1]">{{
+              "Tuesday" | translate
+              }}</nb-checkbox>
+          </div>
+          <div class="col-sm-4 input-group-sm col-6">
+            <nb-checkbox [(ngModel)]="sch.days[2]">{{
+              "Wednesday" | translate
+              }}</nb-checkbox>
+          </div>
+          <div class="col-sm-4 input-group-sm col-6">
+            <nb-checkbox [(ngModel)]="sch.days[3]">{{
+              "Thursday" | translate
+              }}</nb-checkbox>
+          </div>
+          <div class="col-sm-4 input-group-sm col-6">
+            <nb-checkbox [(ngModel)]="sch.days[4]">{{
+              "Friday" | translate
+              }}</nb-checkbox>
+          </div>
+          <div class="col-sm-4 input-group-sm col-6">
+            <nb-checkbox [(ngModel)]="sch.days[5]">{{
+              "Saturday" | translate
+              }}</nb-checkbox>
+          </div>
+          <div class="col-sm-4 input-group-sm col-6">
+            <nb-checkbox [(ngModel)]="sch.days[6]">{{
+              "Sunday" | translate
+              }}</nb-checkbox>
+          </div>
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <div class="btn-lg-2">
+          <button nbButton (click)="ref.close()">
+            {{ "Close" | translate }}
+          </button>
+          <button nbButton style="float: right" status="success" (click)="updatePlaylistSchedule(data, index)">
+            {{ "Save" | translate }}
+          </button>
+        </div>
+        <div class="btn-sm-2">
+          <button nbButton (click)="ref.close()">
+            <i style="cursor: pointer" class="ion-close"></i>
+          </button>
+          <button nbButton style="float: right" status="success" (click)="updatePlaylistSchedule(data, index)">
+            <i style="cursor: pointer" class="ion-checkmark"></i>
+          </button>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template #DeleteChannelPlaylistDialog let-data let-ref="dialogRef">
+    <nb-card class="card-sm-2">
+      <nb-card-header>{{ "Delete Playlist" | translate }}</nb-card-header>
+      <nb-card-body>{{
+        "Are you sure you want to delete playlist from this channel?"
+        | translate
+        }}</nb-card-body>
+      <nb-card-footer>
+        <div class="btn-lg-2">
+          <button nbButton (click)="ref.close()">
+            {{ "Close" | translate }}
+          </button>
+          <button nbButton style="float: right" (click)="deleteCP(data)" status="danger">
+            {{ "Delete" | translate }}
+          </button>
+        </div>
+        <div class="btn-sm-2">
+          <button nbButton (click)="ref.close()">
+            <i style="cursor: pointer" class="ion-close"></i>
+          </button>
+          <button nbButton style="float: right" (click)="deleteCP(data)" status="danger">
+            <i style="cursor: pointer" class="ion-trash-b"></i>
+          </button>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template #SettingDialog let-data let-ref="dialogRef">
+    <nb-card style="width: 410px; height: 420px" class="card-sm-2">
+      <nb-card-header>{{ "Settings" | translate }}</nb-card-header>
+      <nb-card-body>
+        <div class="form-group row">
+          <label for="ChannelName" class="col-sm-4 col-form-label"><strong>{{ "Name" | translate }}:</strong></label>
+          <div class="col-sm-8 input-group-sm">
+            <input disabled type="text" fieldSize="small" fullWidth class="form-control" id="ChannelName" [(ngModel)]="data.item.name" [defaultValue]="data.item.name" [value]="data.item.name" placeholder="Channel Name" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="shuffleCheck" class="col-sm-4 col-form-label"><strong>{{ "Shuffle" | translate }}:</strong></label>
+          <div class="col-sm-8 input-group-sm">
+            <nb-checkbox id="shuffleCheck" [(ngModel)]="this.selectedChannel.playlist[data.index].isShuffle">
+            </nb-checkbox>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="mediaNumbers" class="col-sm-4 col-form-label"><strong>{{ "Max. Number of Media" | translate }}:</strong></label>
+          <div class="col-sm-8 input-group-sm">
+            <input type="number" pattern="\d*" fieldSize="small" min="0" oninput="validity.valid||(value='');" fullWidth class="form-control" max="999" id="mediaNumbers" [(ngModel)]="this.selectedChannel.playlist[data.index].MaxMedia" placeholder="Media Numbers" />
+          </div>
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <div class="btn-lg-2">
+          <button nbButton (click)="ref.close()">
+            {{ "Close" | translate }}
+          </button>
+          <button nbButton style="float: right" (click)="updateSetting(); ref.close()" status="success">
+            {{ "Save" | translate }}
+          </button>
+        </div>
+        <div class="btn-sm-2">
+          <button nbButton (click)="ref.close()">
+            <i style="cursor: pointer" class="ion-close"></i>
+          </button>
+          <button nbButton style="float: right" (click)="updateSetting(); ref.close()" status="success">
+            <i style="cursor: pointer" class="ion-checkmark"></i>
+          </button>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <ng-template #SaveChannelConfirmationDialog let-data let-ref="dialogRef">
+    <nb-card class="card-sm-2">
+      <nb-card-header>{{ "Channels" | translate }}</nb-card-header>
+      <nb-card-body>{{
+        "Do you want to save pending publish changes?" | translate
+        }}</nb-card-body>
+      <nb-card-footer>
+        <div class="btn-lg-2">
+          <button nbButton (click)="ref.close('No')">
+            {{ "No" | translate }}
+          </button>
+          <button nbButton style="float: right" status="danger" (click)="ref.close('Yes')">
+            {{ "Yes" | translate }}
+          </button>
+        </div>
+        <div class="btn-sm-2">
+          <button nbButton (click)="ref.close('No')">
+            <i style="cursor: pointer" class="ion-close"></i>
+          </button>
+          <button nbButton style="float: right" status="danger" (click)="ref.close('Yes')">
+            <i style="cursor: pointer" class="ion-checkmark"></i>
+          </button>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <button nbButton [hidden]="true" id="showsavechannelconfirm" (click)="ConfirmationSaveModal(SaveChannelConfirmationDialog)"></button>
+</div>

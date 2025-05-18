@@ -1,0 +1,27 @@
+.form-control {
+  padding: 0.35rem 0.5rem;
+}
+select.form-control:not([size]):not([multiple]) {
+  height: calc(1.5rem + 20px);
+}
+.item {
+  margin: 0 -15px;
+  align-self: stretch;
+}
+@media screen and (max-width: 768px) {
+  .bars {
+    flex-direction: column !important;
+  }
+  .p-1 {
+    padding: 6px !important;
+  }
+  .p-2 {
+    padding: 6px !important;
+  }
+  .p-3 {
+    padding: 6px!important;
+  }
+  .p-4 {
+    padding: 6px!important;
+  }
+}

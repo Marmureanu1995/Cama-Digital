@@ -1,0 +1,233 @@
+.form-control {
+  padding: 0.35rem 0.5rem;
+}
+select.form-control:not([size]):not([multiple]) {
+  height: calc(1.5rem + 20px);
+}
+.item {
+  margin: 0 -15px;
+  align-self: stretch;
+}
+.select-options {
+  margin-right: 10px;
+  padding-top: 10px;
+}
+@media screen and (max-width: 768px) {
+  .bars {
+    flex-direction: column !important;
+  }
+  .p-1 {
+    padding: 6px !important;
+  }
+  .p-2 {
+    padding: 6px !important;
+  }
+  .p-3 {
+    padding: 6px!important;
+  }
+  .p-4 {
+    padding: 6px!important;
+  }
+}
+
+.container_div_playlist {
+  position: relative;
+  max-width: 131px;
+  min-width: 131px;
+  max-height: 147px;
+  min-height: 147px;
+  float: left;
+  margin-bottom: 1%;
+  margin-right: 10px!important;
+}
+.image {
+  max-width: 131px;
+  min-width: 131px;
+  max-height: 117px;
+  min-height: 117px;
+  opacity: 1;
+  display: block;
+  transition: 0.5s ease;
+  backface-visibility: hidden;
+  border-radius: 5%;
+  object-fit: cover;
+}
+.image_playlist {
+  max-width: 131px;
+  min-width: 131px;
+  max-height: 117px;
+  min-height: 117px;
+  display: block;
+  transition: 0.5s ease;
+  backface-visibility: hidden;
+  border-radius: 5%;
+  object-fit: cover;
+}
+
+
+@media screen and (max-width: 768px) {
+  .bars {
+    flex-direction: row !important;
+  }
+  .p-1 {
+    padding: 4px !important;
+  }
+  .p-2 {
+    padding: 0.5rem 15px !important;
+  }
+  .p-3 {
+    padding: 0.5rem 15px !important;
+    margin-left: 0;
+  }
+  .p-4 {
+    padding: 0.5rem 15px !important;
+  }
+  .container {
+    max-width: 100% !important;
+    min-width: 100% !important;
+  }
+  .search-Bar {
+    width: 40px !important;
+    -webkit-transition: width 0.6s ease-in-out;
+    transition: width 0.6s ease-in-out;
+    border: 2px solid transparent;
+  }
+  .search-Bar:focus {
+    width: 165px !important;
+    max-width: 165px;
+  }
+  .lg {
+    display: none;
+  }
+  .sm {
+    margin-top: 15px;
+    display: inherit;
+   }
+  .select-options-sm {
+    max-width: 210px;
+  }
+  .btn-upload {
+    max-width: 210px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+@media screen and (min-width: 768px) {
+  .sm {
+    display: none;
+  }
+  .lg {
+    margin-top: 15px;
+    display: inherit;
+  }
+}
+@media (min-width: 400px) {
+  .container {
+    max-width: 100% !important;
+    min-width: 100% !important;
+  }
+}
+.p-3 {
+  padding-top: 0 !important;
+}
+.restaurant-actions {
+  display: inline-block;
+  min-width: 60px;
+  i {
+    padding: 0 10%;
+  }
+}
+.table {
+  th {
+    white-space: nowrap;
+  }
+  td {
+    white-space: nowrap;
+  }
+}
+.inner-addon {
+  position: relative;
+}
+/* style icon */
+.inner-addon .searchIcon {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* align icon */
+.left-addon .searchIcon  { left:  25px;}
+.right-addon .searchIcon { right: 0;}
+
+/* add padding  */
+.left-addon .search-Bar  { padding-left:  33px !important; }
+.right-addon input { padding-right: 30px; }
+.container {
+  max-width: 100% !important;
+  min-width: 100% !important;
+}
+
+@media screen and (max-width: 575px) {
+  .card-add-edit-Dialogue {
+    width: 85% !important;
+    height: 75% !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+@media screen and (max-width: 490px) {
+
+  .card-delete-Dialogue {
+    width: 80% !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .btn-lg {
+    display: none;
+  }
+  .btn-sm {
+    display: inherit;
+  }
+}
+@media screen and (min-width: 490px) {
+  .btn-lg {
+    display: inherit;
+  }
+  .btn-sm {
+    display: none;
+  }
+}
+nb-card-header {
+  display: unset !important;
+}
+.empty-td {
+  padding: 0;
+  display: block !important;
+  min-width: 141px;
+  min-height: 61px;
+  /*border-top: 2px solid #dee2e6;*/
+  margin-top: -1px;
+}
+.empty-tr {
+  padding: 0;
+  display: block !important;
+  min-width: 141px;
+  min-height: 39px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.active-searchBar {
+  border-color: #262626;
+  width: 100%;
+  padding-left: 33px !important;
+  max-width: 165px;
+}
+.filenameTruncate {
+  width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

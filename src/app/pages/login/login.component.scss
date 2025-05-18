@@ -1,0 +1,103 @@
+
+.sk-chase {
+  width: 25px;
+  height: 25px;
+  position: relative;
+  border-bottom: none;
+  animation: sk-chase 2.5s infinite linear both;
+}
+
+.sk-chase-dot {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-bottom: none;
+  animation: sk-chase-dot 2s infinite ease-in-out both;
+
+
+}
+
+.sk-chase-dot::before {
+  content: '';
+  display: block;
+  width: 25%;
+  height: 25%;
+  background-color: #fff;
+  border-bottom: none;
+  //border-radius: 100%;
+  border-color: white;
+  animation: sk-chase-dot-before 2s infinite ease-in-out both;
+}
+
+.sk-chase-dot:nth-child(1) { animation-delay: -1.1s; }
+.sk-chase-dot:nth-child(2) { animation-delay: -1s; }
+.sk-chase-dot:nth-child(3) { animation-delay: -0.9s; }
+.sk-chase-dot:nth-child(4) { animation-delay: -0.8s; }
+.sk-chase-dot:nth-child(5) { animation-delay: -0.7s; }
+.sk-chase-dot:nth-child(6) { animation-delay: -0.6s; }
+.sk-chase-dot:nth-child(1)::before { animation-delay: -1.1s; }
+.sk-chase-dot:nth-child(2)::before { animation-delay: -1s; }
+.sk-chase-dot:nth-child(3)::before { animation-delay: -0.9s; }
+.sk-chase-dot:nth-child(4)::before { animation-delay: -0.8s; }
+.sk-chase-dot:nth-child(5)::before { animation-delay: -0.7s; }
+.sk-chase-dot:nth-child(6)::before { animation-delay: -0.6s; }
+
+@keyframes sk-chase {
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes sk-chase-dot {
+  80%, 100% { transform: rotate(360deg); }
+}
+
+@keyframes sk-chase-dot-before {
+  50% {
+    transform: scale(0.4);
+  }
+  100%, 0% {
+      transform: scale(1);
+    }
+}
+.img_logo {
+  display: block;
+  margin-left: auto;
+  margin-right: 37%;
+  height: 30%;
+  width: 30%;
+}
+.forgotClass {
+  margin-left: -67px;
+  height: 25px;
+  width: 60px;
+  background: none;
+  color: black;
+  border: 0;
+  -webkit-appearance: none;
+  font-weight: bold;
+}
+.test {
+  width:200px;
+  display:inline-block;
+  overflow: auto;
+  white-space: nowrap;
+  margin: 0 auto;
+  border:1px red solid;
+}
+::ng-deep .nb-arrow-thin-left::before {
+  display: none !important;
+}
+::ng-deep .nb-theme-default nb-card-header {
+  display: none !important;
+}
+@media screen and (min-width: 1200px) and (max-width: 1500px) {
+  .btn-language {
+    flex: 0 0 16.66666667% !important;
+    max-width: 16.66666667% !important;
+  }
+  .language-icon {
+    flex: 0 0 83.33333333% !important;
+    max-width: 83.33333333% !important;
+  }
+}

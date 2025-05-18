@@ -1,0 +1,87 @@
+.dashboard {
+  .card {
+    box-shadow: 10px 10px 20px -6px rgba(0, 0, 0, 0.38);
+    -webkit-box-shadow: 10px 10px 20px -6px rgba(0, 0, 0, 0.38);
+    -moz-box-shadow: 10px 10px 20px -6px rgba(0, 0, 0, 0.38);
+    border-radius: 10px;
+  }
+
+  .agm-map-container-inner {
+    border-radius: 10px;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.5rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+  }
+
+  .badge {
+    position: relative;
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+
+    &:empty {
+      display: block;
+    }
+
+    &.success {
+      background-color: #28a745;
+      color: white;
+    }
+
+    &.warning {
+      background-color: #ffc107;
+      color: white;
+    }
+
+    &.danger {
+      background-color: #dc3545;
+      color: white;
+    }
+  }
+
+  .badge::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 100%;
+    width: 15px;
+    height: 15px;
+
+
+  }
+
+  .topsection,
+  .restaurant-card {
+    .card {
+      background-color: #262626;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    span,
+    * {
+      color: white;
+    }
+
+    .row,
+    h2 {
+      z-index: 2;
+    }
+  }
+
+  .restaurant-card {
+    background-color: #262626;
+  }
+}

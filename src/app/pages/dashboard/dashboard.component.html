@@ -1,0 +1,107 @@
+<div class="dashboard">
+  <div class="flex-container">
+    <div class="topsection mb-2">
+      <div class="top-information row">
+        <div class="m-2 card card-body d-flex justify-content-center align-items-center">
+          <div class="row">
+            <h4 class="m-2">Total Playlists</h4>
+            <i class="menu-icon nb-list m-2" style="    font-size: 2rem;font-weight: 900;"></i>
+
+          </div>
+          <h2>{{ allPlaylist?.length }}</h2>
+        </div>
+        <div class="m-2 card card-body d-flex justify-content-center align-items-center">
+          <div class="row">
+            <h4 class="m-2">Total Screens</h4>
+            <i class="menu-icon nb-angle-double-right m-2" style="    font-size: 2rem;font-weight: 900;"></i>
+          </div>
+          <h2>{{ networkDevList?.length }}</h2>
+        </div>
+        <div class="m-2 card card-body d-flex justify-content-center align-items-center">
+          <div class="row">
+            <h4 class="m-2">Online Devices</h4>
+            <h2 class="ion-checkmark m-2"></h2>
+          </div>
+          <h2>{{ onlineDeviceIds.length }}</h2>
+        </div>
+        <div class="m-2 card card-body d-flex justify-content-center align-items-center">
+          <div class="row">
+            <h4 class="m-2">Offline Devices</h4>
+            <h2 class="ion-close m-2"></h2>
+          </div>
+          <h2>{{ networkDevList.length - onlineDeviceIds.length }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="middle-section m-2 row flex-nowrap" style="flex-direction: column">
+      <div class="w-100 m-1">
+        <div class="card recent-companies w-100 p-3">
+          <div class="top d-flex justify-content-between mb-3">
+            <h5>Players</h5>
+            <div style="display: flex;gap: 36px;justify-content: space-between;">
+              <button [disabled]="selectedPlayers.length < 1" nbButton size="xsmall" class="publish_btn menu_padding" status="info" (click)="openBulkChangeModal(bulkEditChanne)">
+                <small>{{ "Bulk Edit" | translate }}</small>
+              </button>
+              <button [disabled]="!changed" nbButton size="xsmall" class="publish_btn menu_padding" (click)="publishChanges()" [class.new-changes]="this.changed" status="info">
+                <small>{{ "Publish Changes" | translate }}</small>
+              </button>
+            </div>
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col"><input type="checkbox" [checked]="selectedPlayers.length == networkDevList.length" (change)="selectPlayers('', true)" class="form-control" /></th>
+                <th scope="col">{{'Player name' | translate}}</th>
+                <th scope="col">{{'Playlist' | translate}}</th>
+                <th scope="col">{{'Pairing Code ' | translate}}</th>
+                <th scope="col">{{'Active' | translate}}</th>
+                <th scope="col">{{'Status' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of networkDevList">
+                <th scope="row"><input type="checkbox" [checked]="selectedPlayers.includes(item.id)" (change)="selectPlayers(item.id)" class="form-control" /></th>
+                <th scope="row">{{item.playerName}}</th>
+                <td>
+                  <select class="form-control" style="height: 29px;padding: 0px;" [value]="item.playlistId" (change)="changePlaylist(item, $event)">
+                    <option *ngFor="let playlist of allPlaylist" [value]="playlist.id">{{playlist.name}}</option>
+                  </select>
+                </td>
+                <th scope="row">{{item.hexCode}}</th>
+                <th scope="row"><input type="checkbox" [checked]="item.activeCheck" (change)="changeActiveStatus(item,$event)" class="form-control" /></th>
+
+                <td>
+                  <span *ngIf="getStatus(item) == true" class="badge success"> </span>
+                  <span *ngIf="getStatus(item) == false" class="badge danger"> </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <p *ngIf="company && company.companyExpireDate" style="text-align: right;color: black;">Expire Date: {{company?.companyExpireDate}}</p>
+    </div>
+
+    <ng-template #bulkEditChanne let-data let-ref="dialogRef">
+      <nb-card class="card-delete-Dialogue">
+        <nb-card-header>{{'Bulk Edit' | translate}}</nb-card-header>
+        <nb-card-body>
+          <div class="form-group">
+            <label for="playlist">{{'Playlist' | translate}}</label>
+            <select class="form-control" id="playlist" [(ngModel)]="selectedPlaylist" name="playlist">
+              <option value="">{{'Select Playlist' | translate}}</option>
+              <option *ngFor="let playlist of allPlaylist" [value]="playlist.id">{{playlist.name}}</option>
+            </select>
+          </div>
+        </nb-card-body>
+        <nb-card-footer>
+          <div class="btn-lg">
+            <button nbButton (click)="ref.close()">{{'Close' | translate}}</button>
+            <button nbButton style="float: right;" (click)="saveBulkChanges()">{{'Save' | translate}}</button>
+          </div>
+        </nb-card-footer>
+      </nb-card>
+    </ng-template>
+  </div>

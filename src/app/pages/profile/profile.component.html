@@ -1,0 +1,69 @@
+<nb-card style="width: 478px; height: 530px;" [nbSpinner]="profileLoading" class="card-edit-Dialogue" nbSpinnerStatus="danger" nbSpinnerSize="large" nbSpinnerMessage="">
+  <nb-card-header>{{'Edit Profile' | translate}}</nb-card-header>
+  <nb-card-body>
+    <form #form="ngForm" aria-labelledby="title">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <div class="avatar-upload">
+              <div class="avatar-preview">
+                <div id="imagePreview" [style.backgroundImage]="'url('+ imageUrl +')'">
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 input-group-sm text-center">
+              <label for="upImage" class="btn btn-primary">{{'Select Image' | translate}}</label>
+              <input type="file" style="visibility:hidden; display: none" (change)="onSelectFile($event)" accept="image/*" id="upImage" name="upImage">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-control-group" *ngIf="user.email==restaurant.email">
+            <label class="label" for="input-email">{{'Restaurants Name' | translate}}:</label>
+            <input nbInput fullWidth required type="text" name="companyname" [(ngModel)]="restaurant.name" placeholder="Restaurants Name" maxlength="32" autofocus>
+          </div>
+          <br>
+          <div class="form-control-group">
+            <label class="label" for="input-email">{{'User Name' | translate}}:</label>
+            <input nbInput fullWidth required type="text" maxlength="32" name="username" [(ngModel)]="user.username" (input)="CheckAlreadyExist(user)" placeholder="User Name" autofocus>
+            <div *ngIf="usernameAlreadyExist" style="color: red; font-weight: bold; text-align: center;">
+              {{usernameexistmessage}}</div>
+          </div>
+          <br>
+          <div class="form-control-group">
+            <label class="label" for="input-email">{{'Email' | translate}}:</label>
+            <input nbInput fullWidth required type="text" [(ngModel)]="user.email" name="email" placeholder="Email" disabled>
+          </div>
+          <br>
+          <div class="form-control-group" *ngIf="user.email!=restaurant.email">
+            <label class="label" for="input-password">{{'First Name' | translate}}:</label>
+            <input nbInput required fullWidth name="firstname" maxlength="16" type="text" [(ngModel)]="user.firstName" id="input-password" placeholder="First Name">
+          </div>
+          <br>
+          <div class="form-control-group" *ngIf="user.email!=restaurant.email">
+            <label class="label" for="input-password">{{'Last Name' | translate}}:</label>
+            <input nbInput required fullWidth name="lastname" type="text" [(ngModel)]="user.lastName" id="input-password" maxlength="16" placeholder="Last Name">
+          </div>
+        </div>
+      </div>
+    </form>
+  </nb-card-body>
+  <nb-card-footer>
+    <div class="btn-lg-2">
+      <button nbButton (click)="cancel()">
+        {{'Cancel' | translate}} &nbsp;&nbsp;
+      </button>
+      <button nbButton status="success" style="float: right;" [disabled]="usernameAlreadyExist" (click)="update()">
+        {{'Update' | translate}} &nbsp;&nbsp;
+      </button>
+    </div>
+    <div class="btn-sm-2">
+      <button nbButton (click)="cancel()">
+        <i style="cursor: pointer;" class="ion-close"></i>
+      </button>
+      <button nbButton status="success" style="float: right;" [disabled]="usernameAlreadyExist" (click)="update()">
+        <i style="cursor: pointer;" class="ion-checkmark"></i>
+      </button>
+    </div>
+  </nb-card-footer>
+</nb-card>

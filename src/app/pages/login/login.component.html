@@ -1,0 +1,175 @@
+<div class="d-flex" style="display:flex; flex-direction: row;height: 100vh;width: 100%;">
+  <div class="bgStars" style="    position: relative;max-width: 50%;width: 100%;background: linear-gradient(180deg, rgba(5,4,11,1) 0%, rgba(16,16,37,1) 100%);display:flex; flex-direction: column;justify-content: space-evenly;align-items: center;">
+    <div class="header" style="width: 100%;">
+      <!-- <img src="../../../assets/images/logo-main.png" style="width: 80px;padding-left: 10px;" /> -->
+    </div>
+    <div style="max-width: 60%;">
+      <img src="../../../assets/images/Logo white.png" style="width: 420px;" />
+      <p style="color: white;font-size: 20px;font-weight: 500;"> </p>
+    </div>
+    <div class="footer" style=''>
+      <!-- <a href="#" style="color: white;">Privicy Policy</a>
+      -
+      <a href="#" style="color: white;">Terms & Conditions</a> -->
+
+    </div>
+  </div>
+  <div style="max-width: 50%;width: 100%;background-color: white;display:flex; flex-direction: column;justify-content: space-evenly;align-items: flex-start;padding: 20px;">
+    <div class="header" style="width: 100%; display: flex;justify-content: flex-end;">
+      <div class="btn-language" style="padding: 0 10px 0 0;min-width: 200px;">
+        <nb-select style="float: right; margin-right: 1%; padding: 0; width: 100%" status="success" [(ngModel)]="selectedItemNgModel" [(selected)]="translate.currentLang" (ngModelChange)="languageChanged()">
+          <nb-option value="English"><img src="../../../assets/images/united-states.svg" style="width: 22%; margin-right: 2%" />English</nb-option>
+          <nb-option value="Deutsch"><img src="../../../assets/images/germany.svg" style="width: 22%; margin-right: 2%" />Deutsch</nb-option>
+          <nb-option value="Francais"><img src="../../../assets/images/flag.svg" style="width: 22%; margin-right: 2%" />Francais</nb-option>
+          <nb-option value="Nederlands"><img src="../../../assets/images/netherlands.svg" style="width: 22%; margin-right: 2%" />Nederlands</nb-option>
+        </nb-select>
+      </div>
+    </div>
+
+    <div class="content" style="width: 100%;margin-bottom: 30px;">
+      <h3 style="font-weight: 500;font-size: 56px;">Hello,<br>Wellcome!</h3>
+
+      <form #form="ngForm" aria-labelledby="title">
+        <div class="form-control-group">
+          <label class="label" for="input-email" style="color: black;">{{ "Username or Email address" | translate }}:</label>
+          <input nbInput (input)="getUserUsingUsername()" fullWidth [(ngModel)]="email" required name="email" id="input-email" pattern=".+@.+\..+" placeholder="{{ 'Username or Email address' | translate }}" autofocus />
+        </div>
+
+        <div class="form-control-group">
+          <label class="label" for="input-password" style="color: black;">{{ "Password" | translate }}:</label>
+          <input nbInput required fullWidth [(ngModel)]="password" name="password" type="password" id="input-password" placeholder="{{ 'Password' | translate }}" />
+          <span class="forgotClass" style="cursor: pointer" (click)="openemailmodal(content)">Forgot?</span>
+        </div>
+
+        <div style="font-weight: bold; color: red; text-align: center">
+          {{ message }}<br />
+        </div>
+
+        <button nbButton fullWidth status="success" style="height: 55px; padding: 0%" (click)="login()">
+          {{ "Log In" | translate }} &nbsp;&nbsp;<label class="sk-chase" style="margin-bottom: -2%" *ngIf="loader">
+            <span class="sk-chase-dot"></span>
+            <span class="sk-chase-dot"></span>
+            <span class="sk-chase-dot"></span>
+            <span class="sk-chase-dot"></span>
+            <span class="sk-chase-dot"></span>
+            <span class="sk-chase-dot"></span>
+          </label>
+        </button>
+      </form>
+
+
+    </div>
+    <!-- <div class="footer" style="display: flex;flex-direction: row;gap:24px">
+      <h5 style="font-size: 20px;font-weight: 700;">Contact Us</h5>
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 18.6667C15.2377 18.6667 16.4247 18.175 17.2999 17.2998C18.175 16.4247 18.6667 15.2377 18.6667 14C18.6667 12.7623 18.175 11.5753 17.2999 10.7002C16.4247 9.82501 15.2377 9.33334 14 9.33334C12.7624 9.33334 11.5754 9.82501 10.7002 10.7002C9.82504 11.5753 9.33337 12.7623 9.33337 14C9.33337 15.2377 9.82504 16.4247 10.7002 17.2998C11.5754 18.175 12.7624 18.6667 14 18.6667Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M3.5 18.6667V9.33333C3.5 7.78624 4.11458 6.30251 5.20854 5.20854C6.30251 4.11458 7.78624 3.5 9.33333 3.5H18.6667C20.2138 3.5 21.6975 4.11458 22.7915 5.20854C23.8854 6.30251 24.5 7.78624 24.5 9.33333V18.6667C24.5 20.2138 23.8854 21.6975 22.7915 22.7915C21.6975 23.8854 20.2138 24.5 18.6667 24.5H9.33333C7.78624 24.5 6.30251 23.8854 5.20854 22.7915C4.11458 21.6975 3.5 20.2138 3.5 18.6667Z" stroke="#333333" stroke-width="1.5" />
+        <path d="M20.4166 7.59315L20.4266 7.58215" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.19 5.80415C20.5695 4.18435 18.5051 3.08146 16.2577 2.63493C14.0104 2.18841 11.6811 2.41832 9.56445 3.29558C7.44778 4.17285 5.63878 5.65806 4.3662 7.56343C3.09362 9.46879 2.41461 11.7087 2.41504 14C2.41504 17.0731 3.63541 20.0203 5.80785 22.1939C7.98029 24.3674 10.927 25.5893 14 25.5908C15.5207 25.5909 17.0267 25.2936 18.4334 24.7158C19.8352 24.1237 21.1105 23.2683 22.19 22.1958C23.2665 21.1196 24.1203 19.8419 24.7029 18.4356C25.2854 17.0294 25.5853 15.5221 25.5853 14C25.5853 12.4778 25.2854 10.9706 24.7029 9.56435C24.1203 8.1581 23.2665 6.88038 22.19 5.80415ZM21.3734 21.3675C19.7052 23.043 17.5161 24.1005 15.1667 24.3658V16.7125H17.36C17.6695 16.7125 17.9662 16.5896 18.185 16.3708C18.4038 16.152 18.5267 15.8552 18.5267 15.5458C18.5267 15.2364 18.4038 14.9397 18.185 14.7209C17.9662 14.5021 17.6695 14.3792 17.36 14.3792H15.1667V11.1825C15.1667 10.8731 15.2896 10.5763 15.5084 10.3575C15.7272 10.1387 16.024 10.0158 16.3334 10.0158H17.7334C18.0428 10.0158 18.3395 9.8929 18.5583 9.67411C18.7771 9.45532 18.9 9.15857 18.9 8.84915C18.9 8.53973 18.7771 8.24299 18.5583 8.0242C18.3395 7.8054 18.0428 7.68249 17.7334 7.68249H15.75C14.9765 7.68249 14.2346 7.98978 13.6876 8.53676C13.1407 9.08374 12.8334 9.8256 12.8334 10.5992V14.3792H10.6517C10.3423 14.3792 10.0455 14.5021 9.82675 14.7209C9.60796 14.9397 9.48504 15.2364 9.48504 15.5458C9.48504 15.8552 9.60796 16.152 9.82675 16.3708C10.0455 16.5896 10.3423 16.7125 10.6517 16.7125H12.8334V24.3658C10.6667 24.1186 8.63253 23.197 7.01806 21.7311C5.40359 20.2652 4.29047 18.3291 3.83592 16.1963C3.38137 14.0636 3.60837 11.8419 4.48486 9.84509C5.36134 7.8483 6.84301 6.17735 8.72058 5.06824C10.5982 3.95914 12.7767 3.46795 14.9486 3.66404C17.1204 3.86014 19.1758 4.73361 20.8243 6.16109C22.4728 7.58856 23.6313 9.49789 24.1359 11.6194C24.6405 13.7409 24.4659 15.9673 23.6367 17.9842C23.1076 19.2474 22.339 20.3963 21.3734 21.3675Z" fill="#333333" />
+      </svg>
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6.41663 18.6667C12.25 21.5833 15.75 21.5833 21.5833 18.6667" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M18.0833 20.4167L19.25 22.75C19.25 22.75 24.1162 21.2007 25.6667 18.6667C25.6667 17.5 26.285 9.16182 22.1667 6.41666C20.4167 5.24999 17.5 4.66666 17.5 4.66666L16.3333 6.99999H14" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M9.94932 20.4167L8.78265 22.75C8.78265 22.75 3.91648 21.2007 2.36598 18.6667C2.36598 17.5 1.74765 9.16182 5.86599 6.41666C7.61599 5.24999 10.5327 4.66666 10.5327 4.66666L11.6993 6.99999H14.0327" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M9.91663 16.3333C8.95063 16.3333 8.16663 15.2892 8.16663 14C8.16663 12.7108 8.95063 11.6667 9.91663 11.6667C10.8826 11.6667 11.6666 12.7108 11.6666 14C11.6666 15.2892 10.8826 16.3333 9.91663 16.3333ZM18.0833 16.3333C17.1173 16.3333 16.3333 15.2892 16.3333 14C16.3333 12.7108 17.1173 11.6667 18.0833 11.6667C19.0493 11.6667 19.8333 12.7108 19.8333 14C19.8333 15.2892 19.0493 16.3333 18.0833 16.3333Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div> -->
+
+  </div>
+
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      {{ "Reset Password" | translate }}
+    </h4>
+    <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button> -->
+  </div>
+  <div class="modal-body">
+    <form #myForm="ngForm">
+      <div class="form-group">
+        <label for="dateOfBirth">{{ "Enter your email" | translate }}</label>
+        <div class="input-group">
+          <input id="dateOfBirth" class="form-control" placeholder="someone@xyz.com" name="dp" [(ngModel)]="resetemail" />
+          <!-- <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+          </div> -->
+        </div>
+        <br />
+        <p style="color: red" *ngIf="errMsg != ''">* {{ errMsg }}</p>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer" style="display: inline-block">
+    <button nbButton style="float: left" (click)="dialogclose(myForm)">
+      {{ "Close" | translate }}
+    </button>
+    <button nbButton style="float: right" status="primary" (click)="ResetPassword()">
+      {{ "Submit" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<style *ngIf="window.location.hash == '#/pages/auth'">
+  .bgStars:before {
+    content: "";
+    background: url('../../../assets/images/bgStars.png') !important;
+    opacity: 0.4 !important;
+    position: absolute !important;
+    height: 100% !important;
+    width: 100% !important;
+    pointer-events: none !important;
+  }
+
+  ::ng-deep nb-auth nb-card {
+    background: transparent !important;
+    box-shadow: none !important;
+    height: 100% !important;
+
+  }
+
+  ::ng-deep nb-auth nb-auth-block {
+    max-width: none !important;
+
+  }
+
+  ::ng-deep nb-auth ngx-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  ::ng-deep nb-auth nb-layout-column {
+    padding: 0px !important;
+  }
+
+
+
+  ::ng-deep nb-auth .layout {
+    line-height: 1.25 !important;
+    color: white !important;
+    background: white;
+    background-size: 100% !important;
+  }
+
+  ::ng-deep nb-auth .label {
+    color: white;
+  }
+
+  ::ng-deep nb-auth .nb-theme-default nb-card ::-webkit-scrollbar-thumb {
+    background: transparent !important;
+    cursor: pointer;
+    border-radius: 2.5px;
+    display: none !important;
+  }
+
+  ::ng-deep nb-auth nb-card-body {
+    overflow: hidden !important;
+    padding: 0px !important;
+  }
+</style>

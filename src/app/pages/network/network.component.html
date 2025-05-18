@@ -1,0 +1,113 @@
+<div class="row">
+  <div id="Navbar" class="sidenav">
+    <div class="playlist-color">
+      <div class="align_playlist_btn">
+        <!--Players-->
+        <div class="row" style="width: 100%; margin-left: 0">
+          <div [ngClass]="{
+              'col-md-6 col-6': !showchannelassociation == true,
+              'col-md-12': showchannelassociation == true
+            }" style="padding-right: 0">
+            <div *ngIf="showchannelassociation" class="align_a text-center" (click)="refreshTabChannels()">
+              <i class="align_btn ion-android-sync" style="margin: 0 auto"></i>
+              {{ "Refresh" | translate }}
+            </div>
+            <div *ngIf="!showchannelassociation" class="align_a text-center" (click)="refreshTab()">
+              <i class="align_btn ion-android-sync" style="margin: 0 auto"></i>
+              {{ "Refresh" | translate }}
+            </div>
+          </div>
+          <div class="col-md-6 col-6">
+            <div *ngIf="!showchannelassociation" class="align_a text-center" id="playersAdd" (click)="AddNewPlayer()">
+              <i class="align_btn ion-android-add"></i>
+              {{ "Add" | translate }}
+            </div>
+          </div>
+        </div>
+
+        <!--Players-->
+      </div>
+
+      <div class="col-sm-12" style="margin-top: 10px">
+        <nb-select [(ngModel)]="selectedValue" style="background-color: white; border-radius: 10px" outline status="primary" size="xsmall" (selectedChange)="onSelection($event)" placeholder="Sort" outline>
+          <nb-option *ngIf="!showchannelassociation" value="1">{{
+            "Screen Name" | translate
+            }}</nb-option>
+          <nb-option *ngIf="showchannelassociation" value="2">{{
+            "Channel Name" | translate
+            }}</nb-option>
+          <nb-option *ngIf="showchannelassociation" value="3">{{
+            "Creation Date" | translate
+            }}</nb-option>
+          <!-- <nb-option value="2">Creation Date</nb-option> -->
+        </nb-select>
+      </div>
+      <div *ngIf="!showchannelassociation" class="col-12 playlist">
+        <div *ngFor="let player of PlayersList | async" (click)="selectPlayer(player)">
+          <div class="playlist_items" style="background-color: #262626" *ngIf="isActive == player.id">
+            <label class="playlist_name" [attr.title]="
+                player?.playerName?.length > 15 ? player?.playerName : ''
+              ">{{ player.playerName | truncate : [15, "..."] }}</label>
+            <i class="icons-playlist ion-trash-b" (click)="deletePlayerpopup(DeletePlayerDialog, player)"></i>
+            <i class="icons-playlist ion-edit" (click)="selectPlayer(player)"></i>
+          </div>
+          <div class="playlist_items" *ngIf="isActive != player.id">
+            <label class="playlist_name" [attr.title]="
+                player?.playerName?.length > 15 ? player?.playerName : ''
+              ">{{ player.playerName | truncate : [15, "..."] }}</label>
+            <i class="icons-playlist ion-trash-b" (click)="deletePlayerpopup(DeletePlayerDialog, player)"></i>
+            <i class="icons-playlist ion-edit" (click)="selectPlayer(player)"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="showchannelassociation == true" class="col-12 playlist">
+        <div *ngFor="let channel of channelsList" (click)="selectChannel(channel)">
+          <div class="playlist_items" *ngIf="isActive == channel.id" style="background-color: #262626">
+            <label class="playlist_name">{{ channel.name }}</label>
+          </div>
+          <div class="playlist_items" *ngIf="isActive != channel.id">
+            <label class="playlist_name">{{ channel.name }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="emptyspaceadd">
+        <label class="playlist_name"></label>
+      </div>
+    </div>
+  </div>
+
+  <nb-card id="check" class="cards">
+    <nb-card-header><ngx-topBar></ngx-topBar></nb-card-header>
+    <nb-card-body>
+      <span class="ion-android-menu toggle-icon" id="open_btn" (click)="openNav()"></span>
+      <ngx-player [media]="media" [events]="eventPlayer.asObservable()"></ngx-player>
+    </nb-card-body>
+  </nb-card>
+
+  <ng-template #DeletePlayerDialog let-data let-ref="dialogRef">
+    <nb-card class="card-delete-Dialogue">
+      <nb-card-header>{{ "Delete Screen" | translate }}</nb-card-header>
+      <nb-card-body>{{
+        "Are you sure you want to delete this Screen?" | translate
+        }}</nb-card-body>
+      <nb-card-footer>
+        <div class="btn-lg-2">
+          <button nbButton (click)="ref.close()">
+            {{ "Close" | translate }}
+          </button>
+          <button nbButton style="float: right" status="danger" (click)="deletePlayer(data)">
+            {{ "Delete" | translate }}
+          </button>
+        </div>
+        <div class="btn-sm-2">
+          <button nbButton (click)="ref.close()">
+            <i style="cursor: pointer" class="ion-close"></i>
+          </button>
+          <button nbButton style="float: right" status="danger" (click)="deletePlayer(data)">
+            <i style="cursor: pointer" class="ion-trash-b"></i>
+          </button>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+</div>
